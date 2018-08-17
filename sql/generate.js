@@ -4,11 +4,10 @@ let color = require('colors')
 let path = require('path')
 let async = require('async')
 let Bar = require('./processBar')
-let connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : 'root'
-});
+
+let cc = require('../.config') || require('../.config.js.example')
+
+let connection = mysql.createConnection(cc.database);
 console.log('start connecting to mysql...'.blue)
 connection.connect(function(err) {
   if (err) {
