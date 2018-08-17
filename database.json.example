@@ -1,0 +1,11 @@
+{
+  "defaultEnv": "local",
+  "local": {
+    "host": "localhost",
+    "user": "root",
+    "password" : "root",
+    "database": "mc",
+    "driver": "mysql",
+    "multipleStatements": true
+  }
+}
