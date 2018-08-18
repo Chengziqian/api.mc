@@ -15,18 +15,24 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.createTable({
+  return db.createTable('api_token', {
     id: {type: 'int', primaryKey: true, autoIncrement: true},
-    start_time: {type: 'timestamp', notNull: true},
+    create_time: {type: 'timestamp', notNull: true, onUpdate: 'CURRENT_TIMESTAMP', defaultValue: 'CURRENT_TIMESTAMP'},
     user_id: {type: 'int', notNull: true},
     token: {type: 'string', notNull: true},
     ip: {type: 'string', notNull: true},
-    expired_time: {type: 'timestamp', notNull: true}
-  });
+    expired_time: {type: 'timestamp', notNull: true, defaultValue: 'CURRENT_TIMESTAMP'},
+  }).then(function (res) {
+  }, function (err) {
+    throw err
+  });;
 };
 
 exports.down = function(db) {
-  return null;
+  return db.dropTable('api_token').then(function (res) {
+  }, function (err) {
+    throw err
+  });
 };
 
 exports._meta = {
