@@ -18,7 +18,7 @@ exports.up = function(db) {
   return db.createTable('users', {
     id: {type: 'int', primaryKey: true, autoIncrement: true},
     password: {type: 'string', notNull: true},
-    accsee: {type: 'int', defaultValue: 0},
+    access: {type: 'int', defaultValue: 0},
     status: {type: 'int', defaultValue: 0},
     type: {type: 'int', notNull: true},
     truename: 'string',
@@ -29,7 +29,7 @@ exports.up = function(db) {
     major: 'string',
     login_time: 'datetime',
     school_number: 'string',
-    email: 'string',
+    email: {type: 'string', notNull: true},
     qq_number: 'string',
     phone: 'string',
   }).then(function (res) {
