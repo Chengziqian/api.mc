@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
+const moment = require('moment');
+const uuid = require('uuid/v1');
 const validate = require('../../libs/validate');
 const DB = require('../../libs/DB_Service');
 let valid_teacher = {
@@ -68,10 +70,24 @@ router.post('/', function(req, res, next) {
         if (findResults.length > 0) {
           res.status(422).send({email: ["email is repeated"]})
         } else {
-          obj.DBService.query('INSERT INTO `users` SET ?', data,
-            function (insertError, insertResults, findField) {
-              if(insertError) next(insertError);
-              res.sendStatus(200);
+          obj.DBService.query('INSERT INTO `users` SET ?', [data],
+            function (insertError, insertResults, insertField) {
+              if(insertError) next(insertError)
+              let user_id = insertResults.insertId;
+              let token = {
+                user_id: user_id,
+                token: uuid(),
+                ip: req.connection.remoteAddress,
+                expired_time: moment().add(20, 'm').format('YYYY-MM-DD HH:mm:ss')
+              }
+              obj.DBService.query('INSERT INTO `api_token` SET ?', [token],
+                function (tokenError, tokenResult, tokenField) {
+                  if (tokenError) {
+                    next(tokenError)
+                  } else {
+                    res.sendStatus(200);
+                  }
+                })
           })
         }
       }
