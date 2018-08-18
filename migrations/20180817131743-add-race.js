@@ -18,7 +18,7 @@ exports.up = function(db) {
   return db.createTable('race',{
     id: {type: 'int', primaryKey: true, autoIncrement: true},
     name: {type: 'string', notNull: true},
-    introduction: {type: 'string', notNull: true},
+    introduction: {type: 'string'},
     start_time: {type: 'datetime', notNull: true},
     end_time: {type: 'datetime', notNull: true}
   }).then(function (res) {
