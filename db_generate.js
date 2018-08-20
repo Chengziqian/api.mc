@@ -29,6 +29,7 @@ function generateDB(data, conn) {
     }
   );
 }
-DB(function (DB_obj) {
-  generateDB(DB_obj.DBConfig, DB_obj.DBService);
+DB(function (err, DB_obj) {
+  if (err) throw err;
+  generateDB(DB_obj.DBConfig, DB_obj.DBService.CONN);
 })

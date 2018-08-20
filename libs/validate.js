@@ -83,7 +83,11 @@ module.exports = function (data, roles, callback) {
       throw 'role property undefined'
     }
   }
-  callback(errorList);
+  if (JSON.stringify(errorList) === '{}') {
+    callback(null)
+  } else {
+    callback({status: 422, message: errorList})
+  }
 };
 
 
