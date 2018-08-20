@@ -4,7 +4,7 @@ let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 let bodyParser = require('body-parser')
 let Register = require('./routes/Auth/register');
-
+let Login = require('./routes/Auth/login');
 let app = express();
 
 
@@ -14,8 +14,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json())
 app.use(cookieParser());
 
-app.use('/auth/register', Register);
-
+app.use('/auth', Register);
+app.use('/auth', Login);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -28,7 +28,7 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500).send(err);
+  res.status(err.status || 500).send(err.message || err);
 });
 
 module.exports = app;

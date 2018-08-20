@@ -33,7 +33,7 @@ let getClientIp = function (req) {
     req.connection.socket.remoteAddress || '';
 };
 
-router.post('/', function(req, res, next) {
+router.post('/register', function(req, res, next) {
   validate({type: req.body.type},{type: [{type:'required'},{type: 'integer'}]}, function (err) {
     if (err) next(err);
     else next();
@@ -53,30 +53,22 @@ router.post('/', function(req, res, next) {
   data.access = -1;
   data.password = crypto.createHash('sha1').update(data.password).digest('hex');
   let token;
-  DB(function (err, db) {
-    if (err) throw {status:500, message:err};
-    db.DBService.GET('users','email', data.email, function (err, res) {
-      if (err) throw {status:500, message:err};
-      else if (res.length > 0) throw {status: 422, message:{email: ["email is repeated"]}};
-    }).then(dbs => {
-      return dbs.SET('users', data, function (err, res) {
-        if (err) throw {status:500, message:err};
-        let user_id = res.insertId;
-        token = {
-          user_id: user_id,
-          token: uuid(),
-          ip: getClientIp(httpReq),
-          expired_time: moment().add(20, 'm').format('YYYY-MM-DD HH:mm:ss')
-        };
-      })
-    }).then(dbs => {
-      dbs.SET('api_token', token, function (err, res) {
-        if (err) throw {status:500, message:"api"};
-      })
+  DB.GET('users','email', data.email).then(res => {
+      if (res.length > 0) return Promise.reject({status: 422, message:{email: ["email is repeated"]}});
+      return DB.INSERT('users', data);
+    }).then(res => {
+      let user_id = res.insertId;
+      token = {
+        user_id: user_id,
+        token: uuid(),
+        ip: getClientIp(httpReq),
+        expired_time: moment().add(20, 'm').format('YYYY-MM-DD HH:mm:ss')
+      };
+      return DB.INSERT('api_token', token);
     }).then((res) => httpRes.status(200).send({token: token.token})).catch(e => {
-      next(e);
+      console.log(e.stack || e)
+      next(e.stack || e);
     })
-  })
-});
+  });
 
 module.exports = router;

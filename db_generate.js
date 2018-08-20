@@ -1,6 +1,12 @@
 const color = require('colors');
 const DB = require('./libs/DB_Service');
 const readline = require('readline');
+let config;
+try {
+  config = require('./database.json')
+} catch (e) {
+  config = require('./database.json.example')
+}
 let read = readline.createInterface({
   input:process.stdin,
   output:process.stdout
@@ -23,13 +29,10 @@ function generateDB(data, conn) {
         });
       } else {
         console.log("process stop".green)
-        read.close()
+        read.close();
         process.exit(0)
       }
     }
   );
 }
-DB(function (err, DB_obj) {
-  if (err) throw err;
-  generateDB(DB_obj.DBConfig, DB_obj.DBService.CONN);
-})
+generateDB(config, DB.CONN);
