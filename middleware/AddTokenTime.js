@@ -9,16 +9,17 @@ let getClientIp = function (req) {
 };
 
 module.exports = function (HttpReq, HttpRes, next) {
-  let token = req.headers['Api-Token']
+  let token = HttpReq.headers['api-token'];
   let user = {};
   let api_token = {};
   let old_token;
-  DB.GET('api_token', 'token', token).then(res => {
-    if (res.length === 0) throw 'next';
+  DB.GET('api_token', 'token', token, 'first').then(res => {
+    console.log(res);
+    if (res.length === 0) return Promise.reject('next');
     else {
       api_token = res[0];
       old_token = api_token.token;
-      return DB.GET('users', 'id', res.user_id);
+      return DB.GET('users', 'id', res[0].user_id);
     }
   }).then(res => {
     if (res.length === 0) return Promise.reject('next');
@@ -36,6 +37,9 @@ module.exports = function (HttpReq, HttpRes, next) {
     }
   }).then(res => next()).catch(e => {
     if (e === 'next') next();
-    else next(e);
+    else {
+      console.log(e.stack || e);
+      next(e.stack || e);
+    }
   })
-}
+};

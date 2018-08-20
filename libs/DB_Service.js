@@ -32,9 +32,15 @@ function createConnection(config) {
           });
       });
     },
-    GET: function (tableName, findFieldName, findValue) {
+    GET: function (tableName, findFieldName, findValue, options) {
       return new Promise((resolve, reject) => {
-        connection.query('SELECT * FROM ?? WHERE ?? = ?', [tableName, findFieldName, findValue],
+        let sql;
+        if (options && options === 'first'){
+          sql = 'SELECT * FROM ?? WHERE ?? = ? ORDER BY `create_time` DESC LIMIT 1';
+        } else {
+          sql = 'SELECT * FROM ?? WHERE ?? = ?';
+        }
+        connection.query(sql, [tableName, findFieldName, findValue],
           (err, res, field) => {
             if (err) reject(err);
             else resolve(res);

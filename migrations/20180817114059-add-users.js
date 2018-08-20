@@ -32,6 +32,7 @@ exports.up = function(db) {
     email: {type: 'string', notNull: true},
     qq_number: 'string',
     phone: 'string',
+    create_time: {type: 'timestamp', notNull: true, onUpdate: 'CURRENT_TIMESTAMP', defaultValue: 'CURRENT_TIMESTAMP'}
   }).then(function (res) {
   }, function (err) {
     throw err
