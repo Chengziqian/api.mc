@@ -1,5 +1,5 @@
 const color = require('colors');
-const DB = require('./libs/DB_Service');
+const mysql = require('mysql');
 const readline = require('readline');
 let config;
 try {
@@ -11,7 +11,13 @@ let read = readline.createInterface({
   input:process.stdin,
   output:process.stdout
 });
-function generateDB(data, conn) {
+let connection = mysql.createConnection({
+  host: config.local.host,
+  user: config.local.user,
+  password: config.local.password,
+  multipleStatements: config.local.multipleStatements
+});
+function generateDB(data) {
   read.question(("Continuing execution will drop the database named").red + (" [" + data.local.database +
     "] ").magenta + ("and create new database named").red + (" [" + data.local.database + "] ").magenta +
     ("which is empty.\n").red +
@@ -20,7 +26,7 @@ function generateDB(data, conn) {
       if (answer === 'Y' || answer === 'y') {
         let sql_drop = "DROP DATABASE IF EXISTS `" + data.local.database + "`;";
         let sql_create = " CREATE DATABASE `" + data.local.database + "`";
-        conn.query(sql_drop + sql_create, function (err, rows, fields) {
+        connection.query(sql_drop + sql_create, function (err, rows, fields) {
           if (err) {
             throw err;
           }
@@ -35,4 +41,4 @@ function generateDB(data, conn) {
     }
   );
 }
-generateDB(config, DB.CONN);
+generateDB(config);
