@@ -26,7 +26,6 @@ router.post('/login', function(req, res, next) {
   let data = httpReq.body;
   let token = {};
   DB.GET('users', 'email', data.email).then(res => {
-    console.log(httpReq.headers['host'])
     if (res.length === 0) return Promise.reject(new HttpError(401, '用户名或密码错误'));
     else {
       let psw = crypto.createHash('sha256').update(data.password).digest('hex');

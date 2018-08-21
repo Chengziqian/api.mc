@@ -17,7 +17,7 @@ exports.setup = function(options, seedLink) {
 exports.up = function(db) {
   return db.createTable('api_token', {
     id: {type: 'int', primaryKey: true, autoIncrement: true},
-    create_time: {type: 'timestamp', notNull: true, onUpdate: 'CURRENT_TIMESTAMP', defaultValue: 'CURRENT_TIMESTAMP'},
+    create_time: {type: 'timestamp', notNull: true, defaultValue: 'CURRENT_TIMESTAMP'},
     user_id: {type: 'int', notNull: true},
     token: {type: 'string', notNull: true},
     ip: {type: 'string', notNull: true},

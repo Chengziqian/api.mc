@@ -34,7 +34,7 @@ exports.up = function(db) {
     phone: 'string',
     active_code: 'string',
     reset_token: 'string',
-    create_time: {type: 'timestamp', notNull: true, onUpdate: 'CURRENT_TIMESTAMP', defaultValue: 'CURRENT_TIMESTAMP'}
+    create_time: {type: 'timestamp', notNull: true,  defaultValue: 'CURRENT_TIMESTAMP'}
   }).then(function (res) {
   }, function (err) {
     throw err

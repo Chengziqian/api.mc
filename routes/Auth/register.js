@@ -42,7 +42,6 @@ router.post('/register', function(req, res, next) {
   data.status = 0;
   data.access = -1;
   data.active_code = randomString(64);
-  data.login_time = moment().format('YYYY-MM-DD HH:mm:ss');
   data.password = crypto.createHash('sha256').update(data.password).digest('hex');
   let token;
   DB.GET('users','email', data.email).then(res => {
@@ -52,7 +51,7 @@ router.post('/register', function(req, res, next) {
       let html = '<h1>数学竞赛激活邮件</h1>' +
         '<hr>' +
         '<p>请点击以下链接激活</p>' +
-        '<a href="'+ httpReq.headers.host +
+        '<a href="'+ 'http://' + httpReq.headers.host +
         '/auth/active?id=' + res.insertId + '&active=' + data.active_code +'">'+ httpReq.headers.host +
         '/auth/active?id=' + res.insertId + '&active=' + data.active_code + '</a>';
       return mailSender(data.email, "数学竞赛", "激活邮件", html);
