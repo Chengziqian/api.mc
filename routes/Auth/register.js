@@ -53,8 +53,8 @@ router.post('/register', function(req, res, next) {
         '<hr>' +
         '<p>请点击以下链接激活</p>' +
         '<a href="'+ process.env.API_baseUrl +
-        'auth/active?id=' + res.insertId + '&active=' + data.active_code +'">'+ process.env.API_baseUrl +
-        'auth/active?id=' + res.insertId + '&active=' + data.active_code + '</a>';
+        '/auth/active?id=' + res.insertId + '&active=' + data.active_code +'">'+ process.env.API_baseUrl +
+        '/auth/active?id=' + res.insertId + '&active=' + data.active_code + '</a>';
       mailSender(data.email, "数学竞赛", "激活邮件", html);
     }).then((res) => httpRes.sendStatus(200)).catch(e => {
       console.log(e.stack || e)
