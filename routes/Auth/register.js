@@ -2,36 +2,26 @@ const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
 const moment = require('moment');
-const uuid = require('uuid/v1');
+const mailSender = require('../../libs/Mail_Service');
 const validate = require('../../libs/validate');
 const DB = require('../../libs/DB_Service');
 let valid = {
   email: [{type:'required'},{type:'string'},{type: 'email'}],
   password: [{type:'required'},{type: 'string'}],
   type: [{type:'required'},{type: 'integer'}],
+};
+
+function randomString(len) {
+  len = len || 32;
+  let $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let maxPos = $chars.length;
+  let pwd = '';
+  for (i = 0; i < len; i++) {
+    pwd += $chars.charAt(Math.floor(Math.random() * (maxPos+1)));
+  }
+  return pwd;
 }
 
-// let valid_student = {
-//   email: [{type:'required'},{type:'string'},{type: 'email'}],
-//   password: [{type:'required'},{type: 'string'}],
-//   type: [{type:'required'},{type: 'integer'}],
-//   truename: [{type:'required'},{type: 'string'}],
-//   qq_number: [{type:'required'},{type: 'string'}],
-//   phone: [{type:'required'},{type: 'string'}],
-//   id_code: [{type:'required'},{type: 'string'}],
-//   competition_area: [{type:'required'},{type: 'string'}],
-//   competition_type: [{type:'required'},{type: 'integer'}],
-//   school_name: [{type:'required'},{type: 'string'}],
-//   major: [{type:'required'},{type: 'string'}],
-//   school_number: [{type:'required'},{type: 'string'}]
-// };
-
-let getClientIp = function (req) {
-  return req.ip || req.headers['x-forwarded-for'] ||
-    req.connection.remoteAddress ||
-    req.socket.remoteAddress ||
-    req.connection.socket.remoteAddress || '';
-};
 
 router.post('/register', function(req, res, next) {
   validate({type: req.body.type},{type: [{type:'required'},{type: 'integer'}]}, function (err) {
@@ -51,22 +41,22 @@ router.post('/register', function(req, res, next) {
   let data = httpReq.body;
   data.status = 0;
   data.access = -1;
+  data.active_code = randomString(32);
   data.login_time = moment().format('YYYY-MM-DD HH:mm:ss');
-  data.password = crypto.createHash('sha1').update(data.password).digest('hex');
+  data.password = crypto.createHash('sha256').update(data.password).digest('hex');
   let token;
   DB.GET('users','email', data.email).then(res => {
       if (res.length > 0) return Promise.reject({status: 422, message:{email: ["email is repeated"]}});
       return DB.INSERT('users', data);
     }).then(res => {
-      let user_id = res.insertId;
-      token = {
-        user_id: user_id,
-        token: uuid(),
-        ip: getClientIp(httpReq),
-        expired_time: moment().add(20, 'm').format('YYYY-MM-DD HH:mm:ss')
-      };
-      return DB.INSERT('api_token', token);
-    }).then((res) => httpRes.status(200).send({token: token.token})).catch(e => {
+      let html = '<h1>数学竞赛激活邮件</h1>' +
+        '<hr>' +
+        '<p>请点击以下链接激活</p>' +
+        '<a href="'+ process.env.API_baseUrl +
+        'auth/active?id=' + res.insertId + '&active=' + data.active_code +'">'+ process.env.API_baseUrl +
+        'auth/active?id=' + res.insertId + '&active=' + data.active_code + '</a>';
+      mailSender(data.email, "数学竞赛", "激活邮件", html);
+    }).then((res) => httpRes.sendStatus(200)).catch(e => {
       console.log(e.stack || e)
       next(e.stack || e);
     })
