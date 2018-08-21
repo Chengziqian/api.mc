@@ -27,7 +27,7 @@ let valid = {
 // };
 
 let getClientIp = function (req) {
-  return req.headers['x-forwarded-for'] ||
+  return req.ip || req.headers['x-forwarded-for'] ||
     req.connection.remoteAddress ||
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress || '';
@@ -51,6 +51,7 @@ router.post('/register', function(req, res, next) {
   let data = httpReq.body;
   data.status = 0;
   data.access = -1;
+  data.login_time = moment().format('YYYY-MM-DD HH:mm:ss');
   data.password = crypto.createHash('sha1').update(data.password).digest('hex');
   let token;
   DB.GET('users','email', data.email).then(res => {

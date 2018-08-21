@@ -1,12 +1,13 @@
-let createError = require('http-errors');
-let express = require('express');
-let cookieParser = require('cookie-parser');
-let logger = require('morgan');
-let bodyParser = require('body-parser')
-let Register = require('./routes/Auth/register');
-let Login = require('./routes/Auth/login');
-let app = express();
-
+const createError = require('http-errors');
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const bodyParser = require('body-parser')
+const Register = require('./routes/Auth/register');
+const Login = require('./routes/Auth/login');
+const Auth = require('./routes/Auth/auth');
+const app = express();
+const AddTokenTime = require('./middleware/AddTokenTime');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -14,6 +15,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json())
 app.use(cookieParser());
 
+app.use(AddTokenTime);
+
+app.use('/auth', Auth);
 app.use('/auth', Register);
 app.use('/auth', Login);
 // catch 404 and forward to error handler

@@ -6,10 +6,9 @@ const moment = require('moment');
 const validate = require('../../libs/validate');
 const DB = require('../../libs/DB_Service');
 const HttpError = require('../../libs/HttpError');
-const AddTokenTime = require('../../middleware/AddTokenTime');
 
 let getClientIp = function (req) {
-  return req.headers['x-forwarded-for'] ||
+  return req.ip || req.headers['x-forwarded-for'] ||
     req.connection.remoteAddress ||
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress || '';
@@ -18,7 +17,7 @@ let logon_valid = {
   email: [{type:'required'},{type:'string'},{type: 'email'}],
   password: [{type:'required'},{type: 'string'}]
 };
-router.post('/login', AddTokenTime, function(req, res, next) {
+router.post('/login', function(req, res, next) {
   validate(req.body, logon_valid, function (err) {
     if (err) throw err;
     else next();
@@ -42,6 +41,8 @@ router.post('/login', AddTokenTime, function(req, res, next) {
         return Promise.reject(new HttpError(403, '用户名或密码错误'))
       }
     }
+  }).then(res => {
+    return DB.SAVE('users', 'id', token.user_id, {login_time: moment().format('YYYY-MM-DD HH:mm:ss')});
   }).then(res => httpRes.status(200).send({token: token.token})).catch(e => {
       console.log(e.stack || e);
       next(e.stack || e);

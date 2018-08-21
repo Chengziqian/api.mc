@@ -2,19 +2,19 @@ const DB = require('../libs/DB_Service');
 const moment = require('moment');
 
 let getClientIp = function (req) {
-  return req.headers['x-forwarded-for'] ||
+  return req.ip || req.headers['x-forwarded-for'] ||
     req.connection.remoteAddress ||
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress || '';
 };
 
-module.exports = function (HttpReq, HttpRes, next) {
-  let token = HttpReq.headers['api-token'];
+module.exports = function (httpReq, httpRes, next) {
+  console.log('enter add time');
+  let token =  httpReq.headers['api-token'] || httpReq.headers['Api-Token'];
   let user = {};
   let api_token = {};
   let old_token;
   DB.GET('api_token', 'token', token, 'first').then(res => {
-    console.log(res);
     if (res.length === 0) return Promise.reject('next');
     else {
       api_token = res[0];
@@ -27,7 +27,7 @@ module.exports = function (HttpReq, HttpRes, next) {
       user = res[0];
       if (user.id === api_token.user_id &&
         (api_token.expired_time === null || moment(api_token.expired_time).isAfter(moment())) &&
-        api_token.ip === getClientIp(HttpReq)){
+        api_token.ip === getClientIp(httpReq)){
         api_token.expired_time =
           api_token.expired_time === null ? null : moment().add(20, 'm').format('YYYY-MM-DD HH:mm:ss');
         return DB.SAVE('api_token', 'token', old_token, api_token)
