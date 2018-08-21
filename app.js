@@ -7,8 +7,10 @@ const Register = require('./routes/Auth/register');
 const Login = require('./routes/Auth/login');
 const Auth = require('./routes/Auth/auth');
 const Active = require('./routes/Auth/active');
-const app = express();
+const resetPwd = require('./routes/user/resetPwd');
+const changePwd = require('./routes/user/changePwd');
 const AddTokenTime = require('./middleware/AddTokenTime');
+const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -31,6 +33,8 @@ app.use('/auth', Auth);
 app.use('/auth', Register);
 app.use('/auth', Login);
 app.use('/auth', Active);
+app.use('/user', resetPwd);
+app.use('/user', changePwd)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -43,6 +47,7 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
+  console.log(err.message || err);
   res.status(err.status || 500).send(err.message || err);
 });
 

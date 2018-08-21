@@ -17,24 +17,14 @@ router.get('/active', function (httpReq, httpRes, next) {
         else return Promise.reject('INVALID');
       }
     }).then(res => {
-      let html = '<h2 style="color: green">邮箱验证成功</h2>' +
-        '<hr>' +
-        '<a href="' + process.env.APP_baseUrl + '">点击此链接跳转至登陆界面</a>';
-      httpRes.send(html);
+      httpRes.sendStatus(200);
     }).catch(e => {
       if (e === 'ACTIVATED') {
-        let html = '<h2 style="color: green">邮箱已验证</h2>' +
-          '<hr>' +
-          '<a href="' + process.env.APP_baseUrl + '">点击此链接跳转至登陆界面</a>';
-        httpRes.send(html);
+        httpRes.sendStatus(200)
       } else if (e === 'INVALID') {
-        let html = '<h2 style="color: red">未识别的激活链接</h2>' +
-          '<hr>' +
-          '<a href="'+ process.env.APP_baseUrl +'">点击此链接跳转至登陆界面重新发送激活邮件</a>';
-        httpRes.send(html);
+        httpRes.status(422).send(new HttpError(422, '无效的激活链接'))
       }
       else {
-        console.log(e.stack || e);
         next(e.stack || e);
       }
     })

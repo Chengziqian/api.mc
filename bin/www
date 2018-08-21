@@ -7,16 +7,6 @@
 var app = require('../app');
 var debug = require('debug')('api.mc:server');
 var http = require('http');
-
-let cc;
-try {
-  cc = require('../.config.js');
-} catch (e) {
-  cc = require('../.config.js.example');
-}
-
-process.env.APP_baseUrl = cc.APP_baseUrl;
-process.env.API_baseUrl = cc.API_baseUrl;
 /**
  * Get port from environment and store in Express.
  */

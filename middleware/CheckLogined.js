@@ -33,7 +33,6 @@ module.exports = function (httpReq, httpRes, next) {
   }).catch(e => {
     if (e === 'next') next();
     else {
-      console.log(e.stack || e)
       next(e.stack || e);
     }
   })
