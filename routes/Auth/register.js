@@ -5,10 +5,12 @@ const createError = require('http-errors');
 const mailSender = require('../../libs/Mail_Service');
 const validate = require('../../libs/validate');
 const DB = require('../../libs/DB_Service');
+const CheckCaptcha = require('../../middleware/CheckCaptcha');
 let valid = {
   email: [{type:'required'},{type:'string'},{type: 'email'}],
   password: [{type:'required'},{type: 'string'}],
   type: [{type:'required'},{type: 'integer'}],
+  captcha: [{type:'required'},{type: 'string'}]
 };
 
 function randomString(len) {
@@ -37,8 +39,9 @@ router.post('/register', function(req, res, next) {
   if (!(req.body.type === 1 || req.body.type === 0))
     next(createError(422, {message: {type: ["type is invalid"]}}));
   else next();
-}, function (httpReq, httpRes, next) {
+}, CheckCaptcha, function (httpReq, httpRes, next) {
   let data = httpReq.body;
+  delete data['captcha'];
   data.status = 0;
   data.access = -1;
   data.active_code = randomString(64);

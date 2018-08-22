@@ -69,6 +69,15 @@ function createConnection(config) {
         }
       });
     },
+    DELETE_EXPIRED: function (tableName) {
+      return new Promise((resolve, reject) => {
+        connection.query('DELETE FROM ?? WHERE UNIX_TIMESTAMP(`expired_time`) < UNIX_TIMESTAMP()',[tableName],
+          function (err, res, field) {
+            if (err) reject(err);
+            else resolve(res);
+          });
+      });
+    },
     CONN: connection
   };
 }

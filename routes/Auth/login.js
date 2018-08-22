@@ -6,6 +6,7 @@ const moment = require('moment');
 const validate = require('../../libs/validate');
 const DB = require('../../libs/DB_Service');
 const createError = require('http-errors');
+const CheckCaptcha = require('../../middleware/CheckCaptcha');
 
 let getClientIp = function (req) {
   return req.ip || req.headers['x-forwarded-for'] ||
@@ -15,14 +16,15 @@ let getClientIp = function (req) {
 };
 let logon_valid = {
   email: [{type:'required'},{type:'string'},{type: 'email'}],
-  password: [{type:'required'},{type: 'string'}]
+  password: [{type:'required'},{type: 'string'}],
+  captcha: [{type:'required'},{type: 'string'}]
 };
 router.post('/login', function(req, res, next) {
   validate(req.body, logon_valid, function (err) {
     if (err) throw err;
     else next();
   })
-}, function (httpReq, httpRes, next) {
+}, CheckCaptcha, function (httpReq, httpRes, next) {
   let data = httpReq.body;
   let token = {};
   DB.GET('users', 'email', data.email).then(res => {

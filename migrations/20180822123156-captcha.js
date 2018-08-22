@@ -15,16 +15,17 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.createTable('users_races', {
+  return db.createTable('captcha', {
     id: {type: 'int', primaryKey: true, autoIncrement: true},
-    user_id: {type: 'int', notNull: true},
-    race_id: {type: 'int', notNull: true},
-    create_time: {type: 'timestamp', notNull: true, defaultValue: 'CURRENT_TIMESTAMP'}
+    code: {type: 'string', notNull:true},
+    captcha_token: {type: 'string', notNull:true},
+    create_time: {type: 'timestamp', notNull: true,  defaultValue: 'CURRENT_TIMESTAMP'},
+    expired_time: {type: 'timestamp', notNull: true, defaultValue: 'CURRENT_TIMESTAMP'}
   });
 };
 
 exports.down = function(db) {
-  return db.dropTable('users_races').then(function (res) {
+  return db.dropTable('captcha').then(function (res) {
   }, function (err) {
     throw err
   });
