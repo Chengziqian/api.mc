@@ -23,7 +23,8 @@ router.post('/', CheckLogined, CheckAdmin, function (req, res, next) {
     introduction: httpReq.body.introduction || null,
     start_time: httpReq.body.start_time || null,
     end_time: httpReq.body.end_time || null,
-    create_user_id: httpReq.USER.id
+    create_user_id: httpReq.USER.id,
+    update_user_id: httpReq.USER.id
   };
   DB.INSERT('race', data).then(r => {
     httpRes.sendStatus(200);
