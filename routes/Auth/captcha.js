@@ -14,7 +14,7 @@ router.get('/captcha', function (req, res, next) {
   };
   DB.INSERT('captcha', data).then(r => {
     res.type('svg');
-    res.setHeader('Captcha-oken', captcha_token);
+    res.setHeader('Captcha-Token', captcha_token);
     res.status(200).send(captcha.data);
   }).catch(e => next(e));
   DB.DELETE_EXPIRED('captcha').catch(e => console.log(e));
