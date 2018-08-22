@@ -15,24 +15,16 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.createTable('race',{
+  return db.createTable('users_races', {
     id: {type: 'int', primaryKey: true, autoIncrement: true},
-    name: {type: 'string', notNull: true},
-    introduction: {type: 'string'},
-    start_time: {type: 'datetime', notNull: true},
-    end_time: {type: 'datetime', notNull: true},
+    user_id: {type: 'int', notNull: true},
+    race_id: {type: 'int', notNull: true},
     create_time: {type: 'timestamp', notNull: true, defaultValue: 'CURRENT_TIMESTAMP'}
-  }).then(function (res) {
-  }, function (err) {
-    throw err
   });
 };
 
 exports.down = function(db) {
-  return db.dropTable('race').then(function (res) {
-  }, function (err) {
-    throw err
-  });
+  return null;
 };
 
 exports._meta = {

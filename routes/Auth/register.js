@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
-const moment = require('moment');
 const mailSender = require('../../libs/Mail_Service');
 const validate = require('../../libs/validate');
 const DB = require('../../libs/DB_Service');
@@ -52,12 +51,10 @@ router.post('/register', function(req, res, next) {
         '<hr>' +
         '<p>请点击以下链接激活</p>' +
         '<a href="'+ 'http://' + httpReq.headers.host +
-        '/auth/active?id=' + res.insertId + '&active=' + data.active_code +'">'+ httpReq.headers.host +
+        '/auth/active?id=' + res.insertId + '&active=' + data.active_code +'">'+ 'http://' +httpReq.headers.host +
         '/auth/active?id=' + res.insertId + '&active=' + data.active_code + '</a>';
       return mailSender(data.email, "数学竞赛", "激活邮件", html);
-    }).then((res) => httpRes.sendStatus(200)).catch(e => {
-      next(e.stack || e);
-    })
+    }).then((res) => httpRes.sendStatus(200)).catch(e => next(e))
   });
 
 module.exports = router;

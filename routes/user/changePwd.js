@@ -27,9 +27,7 @@ router.put('/changePwd', CheckLogined, function (httpReq, httpRes, next) {
     } else {
       return Promise.reject(new HttpError(422, "旧密码不正确"))
     }
-  }).then(res => httpRes.sendStatus(200)).catch(e => {
-    next (e.stack || e);
-  })
+  }).then(res => httpRes.sendStatus(200)).catch(e => next (e))
 });
 
 module.exports = router

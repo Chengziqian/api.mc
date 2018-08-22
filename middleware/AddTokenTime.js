@@ -38,7 +38,7 @@ module.exports = function (httpReq, httpRes, next) {
   }).then(res => next()).catch(e => {
     if (e === 'next') next();
     else {
-      next(e.stack || e);
+      next(e);
     }
   })
 };
