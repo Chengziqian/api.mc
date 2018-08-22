@@ -5,7 +5,7 @@ const uuid = require('uuid/v1');
 const moment = require('moment');
 const validate = require('../../libs/validate');
 const DB = require('../../libs/DB_Service');
-const HttpError = require('../../libs/HttpError');
+const createError = require('http-errors');
 
 let getClientIp = function (req) {
   return req.ip || req.headers['x-forwarded-for'] ||
@@ -26,12 +26,12 @@ router.post('/login', function(req, res, next) {
   let data = httpReq.body;
   let token = {};
   DB.GET('users', 'email', data.email).then(res => {
-    if (res.length === 0) return Promise.reject(new HttpError(401, '用户名或密码错误'));
+    if (res.length === 0) return Promise.reject(createError(401, {message:'用户名或密码错误'}));
     else {
       let psw = crypto.createHash('sha256').update(data.password).digest('hex');
       if (res[0].password === psw) {
         if (res[0].status === 0) {
-          return Promise.reject(new HttpError(401, '账户未激活'));
+          return Promise.reject(createError(401, {message:'账户未激活'}));
         } else {
           token = {
             user_id: res[0].id,
@@ -42,7 +42,7 @@ router.post('/login', function(req, res, next) {
           return DB.INSERT('api_token', token);
         }
       } else {
-        return Promise.reject(new HttpError(401, '用户名或密码错误'))
+        return Promise.reject(createError(401, {message:'用户名或密码错误'}))
       }
     }
   }).then(res => {

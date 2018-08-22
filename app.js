@@ -48,13 +48,16 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   if (err.stack) {
-    console.log(err.stack)
-    res.status(err.status || 500).send(err.stack);
+    console.log(err.stack);
   }
   else {
     console.log(err.message || err);
-    res.status(err.status || 500).send(err.message || err);
   }
+  if (err.message) {
+    if (err.status === 422) res.status(err.status).send(err.message);
+    else res.status(err.status).send({message: err.message});
+  }
+  else res.status(err.status || 500).send(err);
 });
 
 module.exports = app;

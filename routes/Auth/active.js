@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const DB = require('../../libs/DB_Service');
-const HttpError = require('../../libs/HttpError');
+const createError = require('http-errors');
 const validate = require('../../libs/validate');
 const mailSender = require('../../libs/Mail_Service');
 
@@ -14,24 +14,20 @@ router.get('/active', function (httpReq, httpRes, next) {
       if (res[0].status === 0 && res[0].active_code === active) {
         return DB.SAVE('users','id', id, {status: 1});
       } else {
-        if (res[0].status !== 0)
-        return Promise.reject('ACTIVATED');
-        else return Promise.reject('INVALID');
+        return Promise.reject('INVALID');
       }
     }).then(res => {
       httpRes.sendStatus(200);
     }).catch(e => {
-      if (e === 'ACTIVATED') {
-        httpRes.sendStatus(200)
-      } else if (e === 'INVALID') {
-        httpRes.status(422).send(new HttpError(422, '无效的激活链接'))
+      if (e === 'INVALID') {
+        next(createError(400, {message:'无效的激活链接'}))
       }
       else {
         next(e);
       }
     })
   } else {
-    next()
+    next(createError(400, {message:'无效的激活链接'}))
   }
 });
 
@@ -43,7 +39,7 @@ router.post('/active',function (req, res, next) {
 } ,function (httpReq, httpRes, next) {
   let data = httpReq.body;
   DB.GET('users', 'email', data.email).then(res => {
-    if (res.length === 0) return Promise.reject(new HttpError(422, '无效的邮箱'))
+    if (res.length === 0) return Promise.reject(createError(400, {message:'无效的邮箱'}));
     else {
       let html = '<h1>数学竞赛激活邮件</h1>' +
         '<hr>' +

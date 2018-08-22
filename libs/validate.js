@@ -1,5 +1,6 @@
 const DB = require('./DB_Service');
 const mysql = require('mysql');
+const createError = require('http-errors');
 /**
  *
  * @param data
@@ -86,7 +87,7 @@ module.exports = function (data, roles, callback) {
   if (JSON.stringify(errorList) === '{}') {
     callback(null)
   } else {
-    callback({status: 422, message: errorList})
+    callback(createError(422, {message:errorList}));
   }
 };
 

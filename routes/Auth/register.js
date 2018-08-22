@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
+const createError = require('http-errors');
 const mailSender = require('../../libs/Mail_Service');
 const validate = require('../../libs/validate');
 const DB = require('../../libs/DB_Service');
@@ -34,7 +35,7 @@ router.post('/register', function(req, res, next) {
     })
 }, function (req, res, next) {
   if (!(req.body.type === 1 || req.body.type === 0))
-    next({status: 422, message:{type: ["type is invalid"]}});
+    next(createError(422, {message: {type: ["type is invalid"]}}));
   else next();
 }, function (httpReq, httpRes, next) {
   let data = httpReq.body;
@@ -44,7 +45,7 @@ router.post('/register', function(req, res, next) {
   data.password = crypto.createHash('sha256').update(data.password).digest('hex');
   let token;
   DB.GET('users','email', data.email).then(res => {
-      if (res.length > 0) return Promise.reject({status: 422, message:{email: ["email is repeated"]}});
+      if (res.length > 0) return Promise.reject(createError(422, {message: {email: ["email is repeated"]}}));
       return DB.INSERT('users', data);
     }).then(res => {
       let html = '<h1>数学竞赛激活邮件</h1>' +

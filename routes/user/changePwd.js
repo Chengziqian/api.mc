@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const DB = require('../../libs/DB_Service');
-const HttpError = require('../../libs/HttpError');
+const createError = require('http-errors');
 const crypto = require('crypto');
 const validate = require('../../libs/validate');
 const CheckLogined = require('../../middleware/CheckLogined');
@@ -25,7 +25,7 @@ router.put('/changePwd', CheckLogined, function (httpReq, httpRes, next) {
       let pwd = crypto.createHash('sha256').update(httpReq.body.password_new).digest('hex');
       return DB.SAVE('users', 'id', res[0].id, {password: pwd})
     } else {
-      return Promise.reject(new HttpError(422, "旧密码不正确"))
+      return Promise.reject(createError(422, {message: {password_old: ["旧密码不正确"]}}))
     }
   }).then(res => httpRes.sendStatus(200)).catch(e => next (e))
 });

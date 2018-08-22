@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const DB = require('../../libs/DB_Service');
-const HttpError = require('../../libs/HttpError');
+const createError = require('http-errors');
 const mailSender = require('../../libs/Mail_Service');
 const crypto = require('crypto');
 const validate = require('../../libs/validate');
@@ -29,7 +29,7 @@ router.post('/resetPwd', function(req, res, next){
   let user = {};
   let token = '';
   DB.GET('users', 'email', httpReq.body.email).then(res => {
-    if (res.length === 0) return Promise.reject(new HttpError(422, '邮箱不存在'));
+    if (res.length === 0) return Promise.reject(createError(422, {message:{email: ['邮箱不存在']}}));
     else {
       user = res[0];
       token = randomString(64);
@@ -51,7 +51,7 @@ router.post('/resetPwd', function(req, res, next){
 router.put('/resetPwd',function (req, res, next) {
   let valid = {
     password: [{type:'required'},{type:'string'}],
-    id: [{type:'required'},{type: 'string'}],
+    id: [{type:'required'},{type: 'integer'}],
     reset: [{type:'required'},{type: 'string'}]
   }
   validate(req.body, valid, function (err) {
@@ -74,7 +74,7 @@ router.put('/resetPwd',function (req, res, next) {
       httpRes.sendStatus(200);
     }).catch(e => {
       if (e === 'INVALID') {
-        httpRes.status(422).send(new HttpError(422, '无效的重置链接'))
+        next(createError(400, {message:'无效的重置链接'}))
       }
       else {
         next(e);
