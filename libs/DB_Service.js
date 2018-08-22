@@ -35,16 +35,29 @@ function createConnection(config) {
     GET: function (tableName, findFieldName, findValue, options) {
       return new Promise((resolve, reject) => {
         let sql;
-        if (options && options === 'first'){
-          sql = 'SELECT * FROM ?? WHERE ?? = ? ORDER BY `create_time` DESC LIMIT 1';
+        if (findValue && findFieldName) {
+          if (options && options === 'first'){
+            sql = 'SELECT * FROM ?? WHERE ?? = ? ORDER BY `create_time` DESC LIMIT 1';
+          } else {
+            sql = 'SELECT * FROM ?? WHERE ?? = ?';
+          }
+          connection.query(sql, [tableName, findFieldName, findValue],
+            (err, res, field) => {
+              if (err) reject(err);
+              else resolve(res);
+            });
         } else {
-          sql = 'SELECT * FROM ?? WHERE ?? = ?';
+          if (options && options === 'first') {
+            sql = 'SELECT * FROM ?? ORDER BY `create_time` DESC LIMIT 1';
+          } else {
+            sql = 'SELECT * FROM ??';
+          }
+          connection.query(sql, [tableName],
+            (err, res, field) => {
+              if (err) reject(err);
+              else resolve(res);
+            });
         }
-        connection.query(sql, [tableName, findFieldName, findValue],
-          (err, res, field) => {
-            if (err) reject(err);
-            else resolve(res);
-          });
       });
     },
     CONN: connection

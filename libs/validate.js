@@ -1,6 +1,7 @@
 const DB = require('./DB_Service');
 const mysql = require('mysql');
 const createError = require('http-errors');
+const moment = require('moment');
 /**
  *
  * @param data
@@ -63,6 +64,15 @@ module.exports = function (data, roles, callback) {
                 }
               } else {
                 throw 'role::regex error';
+              }
+              break;
+            case (/^date$/.test(o.type)):
+              if (!moment(data[key]).isValid()) {
+                if (o.errorMessage) {
+                  pushError(errorList, key, o.errorMessage);
+                } else {
+                  pushError(errorList, key, key + ' is invalid');
+                }
               }
               break;
             default:

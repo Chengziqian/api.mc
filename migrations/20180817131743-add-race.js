@@ -21,6 +21,7 @@ exports.up = function(db) {
     introduction: {type: 'string'},
     start_time: {type: 'datetime', notNull: true},
     end_time: {type: 'datetime', notNull: true},
+    create_user_id: {type: 'int'},
     create_time: {type: 'timestamp', notNull: true, defaultValue: 'CURRENT_TIMESTAMP'}
   }).then(function (res) {
   }, function (err) {

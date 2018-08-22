@@ -10,6 +10,8 @@ const Active = require('./routes/Auth/active');
 const resetPwd = require('./routes/user/resetPwd');
 const changePwd = require('./routes/user/changePwd');
 const Profile = require('./routes/user/profile');
+const UserDetail = require('./routes/user/{id}');
+const RaceCreate = require('./routes/race/create');
 const AddTokenTime = require('./middleware/AddTokenTime');
 const app = express();
 
@@ -37,6 +39,8 @@ app.use('/auth', Active);
 app.use('/user', resetPwd);
 app.use('/user', changePwd);
 app.use('/user', Profile);
+app.use('/user', UserDetail);
+app.use('/race', RaceCreate);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
