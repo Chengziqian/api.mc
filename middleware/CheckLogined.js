@@ -28,7 +28,10 @@ module.exports = function (httpReq, httpRes, next) {
     }
   }).then(res => {
     if (res.length === 0) return Promise.reject(craeteError(401, {message:'请先登录'}));
-    else return Promise.reject('next');
+    else {
+      httpReq.USER = res[0];
+      return Promise.reject('next');
+    }
   }).catch(e => {
     if (e === 'next') next();
     else {

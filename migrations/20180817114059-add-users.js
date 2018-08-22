@@ -22,6 +22,7 @@ exports.up = function(db) {
     status: {type: 'int', defaultValue: 0},
     type: {type: 'int', notNull: true},
     truename: 'string',
+    gender: 'int',
     id_code: 'string',
     competition_area: 'string',
     competition_type: 'int',

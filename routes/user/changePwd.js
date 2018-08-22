@@ -16,18 +16,13 @@ router.put('/changePwd', CheckLogined, function (httpReq, httpRes, next) {
     else next();
   })
 }, function (httpReq, httpRes, next) {
-  let token = httpReq.headers['api-token'] || httpReq.headers['Api-Token'];
-  DB.GET('api_token', 'token', token, 'first').then(res => {
-    return DB.GET('users', 'id', res[0].user_id);
-  }).then(res => {
-    let old_pwd = crypto.createHash('sha256').update(httpReq.body.password_old).digest('hex')
-    if (old_pwd === res[0].password) {
-      let pwd = crypto.createHash('sha256').update(httpReq.body.password_new).digest('hex');
-      return DB.SAVE('users', 'id', res[0].id, {password: pwd})
-    } else {
-      return Promise.reject(createError(422, {message: {password_old: ["旧密码不正确"]}}))
-    }
-  }).then(res => httpRes.sendStatus(200)).catch(e => next (e))
+  let old_pwd = crypto.createHash('sha256').update(httpReq.body.password_old).digest('hex')
+  if (old_pwd === httpReq.USER.password) {
+    let pwd = crypto.createHash('sha256').update(httpReq.body.password_new).digest('hex');
+    DB.SAVE('users', 'id', httpReq.USER.id, {password: pwd}).then(e => httpRes.sendStatus(200)).catch(e => next(e))
+  } else {
+    next(createError(422, {message: {password_old: ["旧密码不正确"]}}))
+  }
 });
 
 module.exports = router
