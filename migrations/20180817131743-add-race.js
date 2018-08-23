@@ -22,6 +22,9 @@ exports.up = function(db) {
     start_time: {type: 'datetime', notNull: true},
     end_time: {type: 'datetime', notNull: true},
     create_user_id: {type: 'int'},
+    principal_name: {type: 'string', notNull: true},
+    principal_email: {type: 'string', notNull: true},
+    principal_phone: {type: 'string', notNull: true},
     update_user_id: {type: 'int'},
     create_time: {type: 'timestamp', notNull: true, defaultValue: 'CURRENT_TIMESTAMP'},
     update_time: {type: 'timestamp', notNull: true, onUpdate: 'CURRENT_TIMESTAMP' ,defaultValue: 'CURRENT_TIMESTAMP'}

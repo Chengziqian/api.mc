@@ -9,4 +9,4 @@ const validate = require('../../libs/validate');
 let roles = {
   email: [{type:'required'},{type:'string'},{type: 'email'}]
 };
-router.post('/auth', )
+router.post('/auth', );

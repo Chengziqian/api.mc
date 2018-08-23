@@ -50,15 +50,14 @@ router.post('/register', function(req, res, next) {
   DB.GET('users','email', data.email).then(res => {
       if (res.length > 0) return Promise.reject(createError(422, {message: {email: ["email is repeated"]}}));
       return DB.INSERT('users', data);
-    }).then(res => {
-      let html = '<h1>数学竞赛激活邮件</h1>' +
-        '<hr>' +
-        '<p>请点击以下链接激活</p>' +
-        '<a href="'+ 'http://' + httpReq.headers.host +
-        '/auth/active?id=' + res.insertId + '&active=' + data.active_code +'">'+ 'http://' +httpReq.headers.host +
-        '/auth/active?id=' + res.insertId + '&active=' + data.active_code + '</a>';
-      return mailSender(data.email, "数学竞赛", "激活邮件", html);
-    }).then((res) => httpRes.sendStatus(200)).catch(e => next(e))
+    }).then((res) => httpRes.sendStatus(200)).catch(e => next(e));
+  let html = '<h1>数学竞赛激活邮件</h1>' +
+    '<hr>' +
+    '<p>请点击以下链接激活</p>' +
+    '<a href="'+ 'http://' + httpReq.headers.host +
+    '/auth/active?id=' + res.insertId + '&active=' + data.active_code +'">'+ 'http://' +httpReq.headers.host +
+    '/auth/active?id=' + res.insertId + '&active=' + data.active_code + '</a>';
+  mailSender(data.email, "数学竞赛", "激活邮件", html).catch(e => console.log(e.stack || e));
   });
 
 module.exports = router;
