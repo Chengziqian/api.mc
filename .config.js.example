@@ -7,5 +7,7 @@ module.exports = {
       user: 'account.user', // generated ethereal user
       pass: 'account.pass' // generated ethereal password
     }
-  }
+  },
+  APP_ACTIVE_ROUTE: 'your app active route',
+  APP_RESET_ROUTE: 'your app reset password route'
 }
