@@ -7,6 +7,16 @@
 var app = require('../app');
 var debug = require('debug')('api.mc:server');
 var http = require('http');
+
+let cc;
+try {
+  cc = require('../.config');
+} catch (e) {
+  cc = require('../.config.js.example')
+}
+
+process.env.APP_ACTIVE_ROUTE = cc.APP_ACTIVE_ROUTE;
+process.env.APP_RESET_ROUTE = cc.APP_RESET_ROUTE;
 /**
  * Get port from environment and store in Express.
  */
