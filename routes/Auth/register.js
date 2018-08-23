@@ -46,17 +46,20 @@ router.post('/register', function(req, res, next) {
   data.access = -1;
   data.active_code = randomString(64);
   data.password = crypto.createHash('sha256').update(data.password).digest('hex');
-  let token;
+  let insertId = '';
   DB.GET('users','email', data.email).then(res => {
       if (res.length > 0) return Promise.reject(createError(422, {message: {email: ["email is repeated"]}}));
       return DB.INSERT('users', data);
-    }).then((res) => httpRes.sendStatus(200)).catch(e => next(e));
+    }).then((res) => {
+      insertId = res.insertId;
+      httpRes.sendStatus(200);
+    }).catch(e => next(e));
   let html = '<h1>数学竞赛激活邮件</h1>' +
     '<hr>' +
     '<p>请点击以下链接激活</p>' +
     '<a href="'+ 'http://' + httpReq.headers.host +
-    '/auth/active?id=' + res.insertId + '&active=' + data.active_code +'">'+ 'http://' +httpReq.headers.host +
-    '/auth/active?id=' + res.insertId + '&active=' + data.active_code + '</a>';
+    '/auth/active?id=' + insertId + '&active=' + data.active_code +'">'+ 'http://' +httpReq.headers.host +
+    '/auth/active?id=' + insertId + '&active=' + data.active_code + '</a>';
   mailSender(data.email, "数学竞赛", "激活邮件", html).catch(e => console.log(e.stack || e));
   });
 
