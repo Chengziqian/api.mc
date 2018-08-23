@@ -26,12 +26,7 @@ function randomString(len) {
 }
 
 
-router.post('/register', function(req, res, next) {
-  validate({type: req.body.type},{type: [{type:'required'},{type: 'integer'}]}, function (err) {
-    if (err) next(err);
-    else next();
-  })
-}, function (req, res, next) {
+router.post('/register', function (req, res, next) {
     validate(req.body, valid, function (err) {
       if (err) next(err);
       else next()
