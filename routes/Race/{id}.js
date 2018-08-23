@@ -6,6 +6,7 @@ const CheckLogined = require('../../middleware/CheckLogined');
 const CheckAdmin = require('../../middleware/CheckAdmin');
 const CheckExceptStudent = require('../../middleware/CheckExceptStudent');
 const validate = require('../../libs/validate');
+const ExcelCreater = require('./CreateMembersInfoExcel');
 router.get('/:id',CheckLogined, function (httpReq, httpRes, next) {
   DB.GET('race', 'id', httpReq.params.id).then(r => {
     if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
@@ -61,6 +62,36 @@ router.get('/:id/members', CheckLogined, CheckExceptStudent, function (httpReq, 
       school_number: o.school_number
     }));
     httpRes.status(200).send(r);
+  }).catch(e => next(e));
+});
+
+router.get('/:id/download', CheckLogined, CheckExceptStudent, function (req, res, next) {
+  let race = {};
+  DB.GET('race', 'id', req.params.id).then(r => {
+    if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
+    else {
+      race = r[0];
+      return DB.JOIN_GET('users_races', 'users', 'user_id', 'race_id', req.params.id)
+    }
+  }).then(r => {
+    items = r.map((o, index)=> ({
+      index: index + 1,
+      truename: o.truename,
+      gender: o.gender,
+      id_code: o.id_code,
+      competition_area: o.competition_area,
+      competition_type: o.competition_type,
+      school_name: o.school_name,
+      major: o.major,
+      school_number: o.school_number,
+      contact: o.phone || o.email
+    }));
+    let buffer = ExcelCreater(race.name, '参赛学校（盖章）电子科技大学' +
+      '        负责人:' + race.principal_name +
+      '        电话:' + race.principal_phone +
+      '        Email:' + race.principal_email, items);
+    res.attachment('电子科技大学' + race.name + '参赛表.xlsx');
+    res.status(200).send(buffer);
   }).catch(e => next(e));
 });
 
