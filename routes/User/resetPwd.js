@@ -40,8 +40,8 @@ router.post('/resetPwd', function(req, res, next){
       '<hr>' +
       '<p>请点击以下链接跳转至重置密码页面</p>' +
       '<a href="'+ 'http://' + httpReq.headers.host +
-      '/resetPwd/active?id=' + user.id + '&reset=' + token +'">'+ 'http://' + httpReq.headers.host +
-      '/resetPwd/active?id=' + user.id + '&reset=' + token + '</a>';
+       process.env.APP_RESET_ROUTE +'?id=' + user.id + '&reset=' + token +'">'+ 'http://' + httpReq.headers.host +
+       process.env.APP_RESET_ROUTE + '?id=' + user.id + '&reset=' + token + '</a>';
     return mailSender(user.email, "数学竞赛", "重置邮件", html);
   }).then(res => {
     httpRes.sendStatus(200);
