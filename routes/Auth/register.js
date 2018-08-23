@@ -31,10 +31,6 @@ router.post('/register', function (req, res, next) {
       if (err) next(err);
       else next()
     })
-}, function (req, res, next) {
-  if (!(req.body.type === 1 || req.body.type === 0))
-    next(createError(422, {message: {type: ["type is invalid"]}}));
-  else next();
 }, CheckCaptcha, CheckEmailRepeat, function (httpReq, httpRes, next) {
   let data = httpReq.body;
   delete data['captcha'];
