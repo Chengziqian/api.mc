@@ -41,6 +41,17 @@ function createConnection(config) {
           });
       });
     },
+    JOIN_GET: function(relatedTableName, getTableName, foreignKey, findField ,findValue) {
+      return new Promise((resolve, reject) => {
+        let sql = "SELECT DISTINCT b.* FROM ?? a JOIN ?? b ON a.?? = b.`id` WHERE ?? = ?";
+        let inserts = [relatedTableName, getTableName, foreignKey, findField, findValue];
+        sql = mysql.format(sql, inserts);
+        connection.query(sql, function (err, res, field) {
+          if (err) reject(err);
+          else resolve(res);
+        })
+      })
+    },
     GET: function (tableName, findFieldName, findValue, options) {
       return new Promise((resolve, reject) => {
         let sql;
