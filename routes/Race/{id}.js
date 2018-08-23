@@ -90,8 +90,7 @@ router.get('/:id/download', CheckLogined, CheckExceptStudent, function (req, res
       '        负责人:' + race.principal_name +
       '        电话:' + race.principal_phone +
       '        Email:' + race.principal_email, items);
-    res.attachment('电子科技大学' + race.name + '参赛表.xlsx');
-    res.status(200).send(buffer);
+    res.attachment('电子科技大学' + race.name + '参赛表.xlsx').status(200).send(buffer)
   }).catch(e => next(e));
 });
 

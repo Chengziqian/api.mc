@@ -19,9 +19,6 @@ module.exports = function (headerData, principalInfo ,itemsData) {
     [{value: headerData, style: styles.middle}],
     [{value: principalInfo, style: styles.middle}]
   ];
-
-  console.log(heading);
-
   const columns = Object.getOwnPropertyNames(itemsData[0]).length;
 
   const map = {
@@ -65,8 +62,6 @@ module.exports = function (headerData, principalInfo ,itemsData) {
       }
     }
   }
-
-  console.log(specification);
 
   const dataset = itemsData;
 
