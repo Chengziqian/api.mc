@@ -6,6 +6,7 @@ const mailSender = require('../../libs/Mail_Service');
 const validate = require('../../libs/validate');
 const DB = require('../../libs/DB_Service');
 const CheckCaptcha = require('../../middleware/CheckCaptcha');
+const CheckEmailRepeat = require('../../middleware/CheckEmaliRepeat');
 let valid = {
   email: [{type:'required'},{type:'string'},{type: 'email'}],
   password: [{type:'required'},{type: 'string'}],
@@ -39,7 +40,7 @@ router.post('/register', function(req, res, next) {
   if (!(req.body.type === 1 || req.body.type === 0))
     next(createError(422, {message: {type: ["type is invalid"]}}));
   else next();
-}, CheckCaptcha, function (httpReq, httpRes, next) {
+}, CheckCaptcha, CheckEmailRepeat, function (httpReq, httpRes, next) {
   let data = httpReq.body;
   delete data['captcha'];
   data.status = 0;
@@ -47,10 +48,7 @@ router.post('/register', function(req, res, next) {
   data.active_code = randomString(64);
   data.password = crypto.createHash('sha256').update(data.password).digest('hex');
   let insertId = '';
-  DB.GET('users','email', data.email).then(res => {
-      if (res.length > 0) return Promise.reject(createError(422, {message: {email: ["email is repeated"]}}));
-      return DB.INSERT('users', data);
-    }).then((res) => {
+  DB.INSERT('users', data).then((res) => {
       insertId = res.insertId;
       let html = '<h1>数学竞赛激活邮件</h1>' +
         '<hr>' +
