@@ -27,6 +27,7 @@ router.post('/login', function(req, res, next) {
 }, CheckCaptcha, function (httpReq, httpRes, next) {
   let data = httpReq.body;
   let token = {};
+  let user = {};
   DB.GET('users', 'email', data.email).then(res => {
     if (res.length === 0) return Promise.reject(createError(401, {message:'用户名或密码错误'}));
     else {
@@ -35,6 +36,7 @@ router.post('/login', function(req, res, next) {
         if (res[0].status === 0) {
           return Promise.reject(createError(401, {message:'账户未激活'}));
         } else {
+          user = res[0];
           token = {
             user_id: res[0].id,
             token: uuid(),
@@ -49,7 +51,7 @@ router.post('/login', function(req, res, next) {
     }
   }).then(res => {
     return DB.SAVE('users', 'id', token.user_id, {login_time: moment().format('YYYY-MM-DD HH:mm:ss')});
-  }).then(res => httpRes.status(200).send({token: token.token})).catch(e => next(e))
+  }).then(res => httpRes.status(200).send({id: user.id, access: user.access, token: token.token})).catch(e => next(e))
   });
 
 module.exports = router;

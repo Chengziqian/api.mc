@@ -4,20 +4,31 @@ const DB = require('../../libs/DB_Service');
 const createError = require('http-errors');
 const validate = require('../../libs/validate');
 const mailSender = require('../../libs/Mail_Service');
+const uuid = require('uuid/v1');
+const moment = require('moment');
 
-router.get('/active', function (httpReq, httpRes, next) {
+router.put('/active', function (httpReq, httpRes, next) {
   let id = httpReq.query.id;
   let active = httpReq.query.active;
+  let token = {};
   if (id && active) {
     DB.GET('users', 'id', id).then(res => {
       if (res.length === 0) return Promise.reject('INVALID');
       if (res[0].status === 0 && res[0].active_code === active) {
-        return DB.SAVE('users','id', id, {status: 1});
+        return DB.SAVE('users','id', id, {status: 1, login_time: moment().format('YYYY-MM-DD HH:mm:ss')});
       } else {
         return Promise.reject('INVALID');
       }
     }).then(res => {
-      httpRes.sendStatus(200);
+      token = {
+        user_id: id,
+        token: uuid(),
+        ip: getClientIp(httpReq),
+        expired_time: moment().add(20, 'm').format('YYYY-MM-DD HH:mm:ss')
+      };
+      return DB.INSERT('api_token', token);
+    }).then(res => {
+      httpRes.status(200).send({token: token});
     }).catch(e => {
       if (e === 'INVALID') {
         next(createError(400, {message:'无效的激活链接'}))

@@ -35,6 +35,8 @@ router.post('/teacher', CheckLogined, CheckAdmin, function (req, res, next) {
     email: httpReq.body.email,
     truename: httpReq.body.truename,
     password: crypto.createHash('sha256').update(pwd).digest('hex'),
+    status: 1,
+    access: 0,
     type: 0
   };
   DB.INSERT('users', data).then(res => httpRes.sendStatus(200)).catch(e => next(e));
@@ -48,6 +50,21 @@ router.post('/teacher', CheckLogined, CheckAdmin, function (req, res, next) {
     '<hr>' +
     '<p style="color: red">请妥善管理该邮件并及时登入账户修改密码</p>';
   mailSender(data.email, "数学竞赛", "账号添加提醒", html).catch(e => console.log(e.stack || e));
+});
+
+router.get('/teacher', CheckLogined, CheckAdmin, function (req, res, next) {
+  DB.GET('users', 'type', 0).then(r => {
+    r = r.map(o => ({
+      access: o.access,
+      truename: o.truename,
+      email: o.email,
+      gender: o.gender,
+      qq_number: o.qq_number,
+      phone: o.phone,
+      login_time: o.login_time
+    }));
+    res.status(200).send(r)
+  }).catch(e => next(e));
 });
 
 module.exports = router;

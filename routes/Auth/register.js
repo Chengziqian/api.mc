@@ -7,10 +7,10 @@ const validate = require('../../libs/validate');
 const DB = require('../../libs/DB_Service');
 const CheckCaptcha = require('../../middleware/CheckCaptcha');
 const CheckEmailRepeat = require('../../middleware/CheckEmaliRepeat');
+
 let valid = {
   email: [{type:'required'},{type:'string'},{type: 'email'}],
   password: [{type:'required'},{type: 'string'}],
-  type: [{type:'required'},{type: 'integer'}],
   captcha: [{type:'required'},{type: 'string'}]
 };
 
@@ -45,6 +45,7 @@ router.post('/register', function(req, res, next) {
   delete data['captcha'];
   data.status = 0;
   data.access = -1;
+  data.type = 1;
   data.active_code = randomString(64);
   data.password = crypto.createHash('sha256').update(data.password).digest('hex');
   let insertId = '';
