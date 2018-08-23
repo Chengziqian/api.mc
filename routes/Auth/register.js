@@ -52,15 +52,15 @@ router.post('/register', function(req, res, next) {
       return DB.INSERT('users', data);
     }).then((res) => {
       insertId = res.insertId;
+      let html = '<h1>数学竞赛激活邮件</h1>' +
+        '<hr>' +
+        '<p>请点击以下链接激活</p>' +
+        '<a href="'+ 'http://' + httpReq.headers.host +
+        '/auth/active?id=' + insertId + '&active=' + data.active_code +'">'+ 'http://' +httpReq.headers.host +
+        '/auth/active?id=' + insertId + '&active=' + data.active_code + '</a>';
+      mailSender(data.email, "数学竞赛", "激活邮件", html).catch(e => console.log(e.stack || e));
       httpRes.sendStatus(200);
     }).catch(e => next(e));
-  let html = '<h1>数学竞赛激活邮件</h1>' +
-    '<hr>' +
-    '<p>请点击以下链接激活</p>' +
-    '<a href="'+ 'http://' + httpReq.headers.host +
-    '/auth/active?id=' + insertId + '&active=' + data.active_code +'">'+ 'http://' +httpReq.headers.host +
-    '/auth/active?id=' + insertId + '&active=' + data.active_code + '</a>';
-  mailSender(data.email, "数学竞赛", "激活邮件", html).catch(e => console.log(e.stack || e));
   });
 
 module.exports = router;
