@@ -7,6 +7,13 @@ const mailSender = require('../../libs/Mail_Service');
 const uuid = require('uuid/v1');
 const moment = require('moment');
 
+let getClientIp = function (req) {
+  return req.ip || req.headers['x-forwarded-for'] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    req.connection.socket.remoteAddress || '';
+};
+
 router.put('/active', function (httpReq, httpRes, next) {
   let id = httpReq.query.id;
   let active = httpReq.query.active;
