@@ -12,7 +12,7 @@ let getClientIp = function (req) {
 module.exports = function (httpReq, httpRes, next) {
   let token = httpReq.headers['api-token'] || httpReq.headers['Api-Token'];
   let api_token = {};
-  DB.GET('api_tokn', 'token', token, 'first').then(res => {
+  DB.GET('api_token', 'token', token, 'first').then(res => {
     if (res.length === 0) return Promise.reject(createError(401, {message:'请先登录'}));
     else {
       api_token = res[0];
