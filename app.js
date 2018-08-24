@@ -20,21 +20,13 @@ const Teacher = require('./routes/Admin/teacher');
 const TeacherItem = require('./routes/Admin/teacherItem');
 const AddTokenTime = require('./middleware/AddTokenTime');
 const app = express();
+const ScheduleJob = require('./libs/ScheduleJob');
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json())
 app.use(cookieParser());
-
-// app.all('*', function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Headers", "X-Requested-With");
-//   res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
-//   res.header("X-Powered-By",' 3.2.1')
-//   res.header("Content-Type", "application/json;charset=utf-8");
-//   next();
-// });
 
 app.use(AddTokenTime);
 
@@ -73,5 +65,8 @@ app.use(function(err, req, res, next) {
   }
   else res.status(err.status || 500).send(err.stack || err);
 });
+
+ScheduleJob('captcha', '10 * * * * *');
+ScheduleJob('api_token', '10 * * * * *');
 
 module.exports = app;
