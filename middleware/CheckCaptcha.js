@@ -2,7 +2,6 @@ const DB = require('../libs/DB_Service');
 const createError = require('http-errors');
 const moment = require('moment');
 module.exports = function (httpReq, httpRes, next) {
-  console.log('enter check captcha!');
   let code = httpReq.body.captcha;
   let token = httpReq.headers['captcha-token'] || httpReq.headers['Captcha-Token'];
   DB.GET('captcha', 'captcha_token', token).then(r => {

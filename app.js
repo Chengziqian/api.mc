@@ -60,19 +60,15 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
+
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  if (err.stack) {
-    console.log(err.stack);
-  }
-  else {
-    console.log(err.message || err);
-  }
+  if (!err.status || err.status === 500) console.log(err.stack || err);
   if (err.message && err.status) {
-    if (err.status === 422) res.status(err.status).send(err.message);
+    if (err.status === 422 || err.status === 404) res.status(err.status).send(err.message);
     else res.status(err.status).send({message: err.message});
   }
   else res.status(err.status || 500).send(err.stack || err);

@@ -48,7 +48,7 @@ router.post('/register', function (req, res, next) {
         '<a href="'+ 'http://' + httpReq.headers.host +
         process.env.APP_ACTIVE_ROUTE + '?id=' + insertId + '&active=' + data.active_code +'">'+ 'http://' +httpReq.headers.host +
         process.env.APP_ACTIVE_ROUTE + '?id=' + insertId + '&active=' + data.active_code + '</a>';
-      mailSender(data.email, "数学竞赛", "激活邮件", html).catch(e => console.log(e.stack || e));
+      mailSender(data.email, "数学竞赛", "激活邮件", html).catch(e => console.log(e));
       httpRes.sendStatus(200);
     }).catch(e => next(e));
   });

@@ -9,7 +9,6 @@ let getClientIp = function (req) {
 };
 
 module.exports = function (httpReq, httpRes, next) {
-  console.log('enter add time');
   let token =  httpReq.headers['api-token'] || httpReq.headers['Api-Token'];
   let user = {};
   let api_token = {};
