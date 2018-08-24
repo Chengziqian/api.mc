@@ -51,7 +51,7 @@ router.post('/login', function(req, res, next) {
     }
   }).then(res => {
     return DB.SAVE('users', 'id', token.user_id, {login_time: moment().format('YYYY-MM-DD HH:mm:ss')});
-  }).then(res => httpRes.status(200).send({id: user.id, access: user.access, token: token.token})).catch(e => next(e))
+  }).then(res => httpRes.status(200).send({user_id: user.id, access: user.access, token: token.token})).catch(e => next(e))
   });
 
 module.exports = router;

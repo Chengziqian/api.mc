@@ -37,7 +37,7 @@ router.put('/active', function (httpReq, httpRes, next) {
       };
       return DB.INSERT('api_token', token);
     }).then(res => {
-      httpRes.status(200).send({token: token.token, id: user.id, access: user.access});
+      httpRes.status(200).send({token: token.token, user_id: user.id, access: user.access});
     }).catch(e => {
       if (e === 'INVALID') {
         next(createError(400, {message:'无效的激活链接'}))
