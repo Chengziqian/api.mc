@@ -18,10 +18,12 @@ router.put('/active', function (httpReq, httpRes, next) {
   let id = httpReq.query.id;
   let active = httpReq.query.active;
   let token = {};
+  let user = {};
   if (id && active) {
     DB.GET('users', 'id', id).then(res => {
       if (res.length === 0) return Promise.reject('INVALID');
       if (res[0].status === 0 && res[0].active_code === active) {
+        user = res[0];
         return DB.SAVE('users','id', id, {status: 1, login_time: moment().format('YYYY-MM-DD HH:mm:ss')});
       } else {
         return Promise.reject('INVALID');
@@ -35,7 +37,7 @@ router.put('/active', function (httpReq, httpRes, next) {
       };
       return DB.INSERT('api_token', token);
     }).then(res => {
-      httpRes.status(200).send({token: token.token});
+      httpRes.status(200).send({token: token.token, id: user.id, access: user.access});
     }).catch(e => {
       if (e === 'INVALID') {
         next(createError(400, {message:'无效的激活链接'}))
