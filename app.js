@@ -66,7 +66,7 @@ app.use(function(err, req, res, next) {
   else res.status(err.status || 500).send(err.stack || err);
 });
 
-ScheduleJob('captcha', '10 * * * * *');
-ScheduleJob('api_token', '10 * * * * *');
+ScheduleJob('captcha', '0 * * * * *');
+ScheduleJob('api_token', '0 * * * * *');
 
 module.exports = app;
