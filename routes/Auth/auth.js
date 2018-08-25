@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const DB = require('../../libs/DB_Service');
-const createError = require('http-errors');
 const CheckLogined = require('../../middleware/CheckLogined');
 router.get('/',CheckLogined ,function (httpReq, httpRes, next) {
   let data = httpReq.USER;

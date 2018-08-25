@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
-const createError = require('http-errors');
 const mailSender = require('../../libs/Mail_Service');
 const validate = require('../../libs/validate');
 const DB = require('../../libs/DB_Service');
