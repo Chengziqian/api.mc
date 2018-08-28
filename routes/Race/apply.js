@@ -4,6 +4,7 @@ const DB = require('../../libs/DB_Service');
 const createError = require('http-errors');
 const CheckLogined = require('../../middleware/CheckLogined');
 const validate = require('../../libs/validate');
+const moment  =require('moment');
 
 let valid = {
   truename: [{type: 'string'},{type: 'required'}],
@@ -26,6 +27,7 @@ router.post('/apply/:id',CheckLogined, function(req, res, next){
   DB.GET('race', 'id', httpReq.params.id).then(r => {
     if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
     else {
+      if (!(moment().isBetween(moment(r[0].start_time), moment(r[0].end_time)))) return Promise.reject(createError(400, {message: '比赛报名未开始或已过期'}));
       let data = {
         truename: httpReq.body.truename,
         gender: httpReq.body.gender,

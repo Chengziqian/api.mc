@@ -8,7 +8,7 @@ const validate = require('../../libs/validate');
 let roles = {
   name: [{type: 'string'},{type: 'required'}],
   introduction: [{type: 'string'}],
-  principal_email: [{type: 'string'},{type: 'required'}],
+  principal_email: [{type: 'string'},{type: 'required'},{type: 'email'}],
   principal_phone: [{type: 'string'},{type: 'required'}],
   principal_name: [{type: 'string'},{type: 'required'}],
   start_time: [{type: 'date'},{type: 'required'}],
