@@ -36,7 +36,7 @@ router.post('/', CheckLogined, CheckAdmin, function (req, res, next) {
     update_user_id: httpReq.USER.id
   };
   DB.INSERT('race', data).then(r => {
-    httpRes.sendStatus(200);
+    httpRes.status(200).send({id: r.insertId});
   }).catch(e => next(e));
 });
 
