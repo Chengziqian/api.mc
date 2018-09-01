@@ -16,7 +16,7 @@ router.put('/changePwd', CheckLogined, function (httpReq, httpRes, next) {
     else next();
   })
 }, function (httpReq, httpRes, next) {
-  let old_pwd = crypto.createHash('sha256').update(httpReq.body.password_old).digest('hex')
+  let old_pwd = crypto.createHash('sha256').update(httpReq.body.password_old).digest('hex');
   if (old_pwd === httpReq.USER.password) {
     let pwd = crypto.createHash('sha256').update(httpReq.body.password_new).digest('hex');
     DB.SAVE('users', 'id', httpReq.USER.id, {password: pwd}).then(e => httpRes.sendStatus(200)).catch(e => next(e))

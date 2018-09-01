@@ -8,7 +8,7 @@ router.get('/captcha', function (req, res, next) {
   let captcha_token = uuid();
   let captcha = svgCaptcha.create({color: true});
   let data = {
-    code: captcha.text,
+    code: captcha.text.toLowerCase(),
     captcha_token: captcha_token,
     expired_time: moment().add(10, 'm').format('YYYY-MM-DD HH:mm:ss')
   };
