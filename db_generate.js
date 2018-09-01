@@ -25,7 +25,7 @@ function generateDB(data) {
     ,function(answer) {
       if (answer === 'Y' || answer === 'y') {
         let sql_drop = "DROP DATABASE IF EXISTS `" + data.local.database + "`;";
-        let sql_create = " CREATE DATABASE `" + data.local.database + "`";
+        let sql_create = " CREATE DATABASE `" + data.local.database + "`" + "DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci";
         connection.query(sql_drop + sql_create, function (err, rows, fields) {
           if (err) {
             throw err;
