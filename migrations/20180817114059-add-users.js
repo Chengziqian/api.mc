@@ -24,7 +24,7 @@ exports.up = function(db) {
     truename: 'string',
     gender: 'int',
     id_code: 'string',
-    competition_area: 'string',
+    institute: 'string',
     competition_type: 'int',
     school_name: 'string',
     major: 'string',

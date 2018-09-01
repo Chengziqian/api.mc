@@ -46,7 +46,16 @@ router.delete('/:id', CheckLogined, CheckAdmin, function (httpReq, httpRes, next
 });
 
 router.get('/:id/members', CheckLogined, CheckExceptStudent, function (httpReq, httpRes, next) {
-  DB.JOIN_GET('users_races', 'users', 'user_id', 'race_id', httpReq.params.id).then(r => {
+  let race_competition_area = '';
+  let race_school_name = '';
+  DB.GET('race', 'id', httpReq.params.id).then(r => {
+    if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
+    else {
+      race_competition_area = r[0].competition_area;
+      race_school_name = r[0].school_name;
+      return DB.JOIN_GET('users_races', 'users', 'user_id', 'race_id', httpReq.params.id)
+    }
+  }).then(r => {
     r = r.map(o => ({
       id: o.id,
       truename: o.truename,
@@ -55,9 +64,9 @@ router.get('/:id/members', CheckLogined, CheckExceptStudent, function (httpReq, 
       qq_number: o.qq_number,
       phone: o.phone,
       id_code: o.id_code,
-      competition_area: o.competition_area,
+      competition_area: race_competition_area || '四川省',
       competition_type: o.competition_type,
-      school_name: o.school_name,
+      school_name: race_school_name || o.school_name,
       major: o.major,
       school_number: o.school_number
     }));
@@ -79,9 +88,9 @@ router.get('/:id/download', CheckLogined, CheckExceptStudent, function (req, res
       truename: o.truename,
       gender: o.gender,
       id_code: o.id_code,
-      competition_area: o.competition_area,
+      competition_area: race.competition_area || '四川省',
       competition_type: o.competition_type,
-      school_name: o.school_name,
+      school_name: race.school_name || o.school_name,
       major: o.major,
       school_number: o.school_number,
       contact: o.phone || o.email

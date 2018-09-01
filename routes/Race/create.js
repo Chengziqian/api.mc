@@ -8,6 +8,8 @@ const validate = require('../../libs/validate');
 let roles = {
   name: [{type: 'string'},{type: 'required'}],
   introduction: [{type: 'string'}],
+  competition_area: [{type: 'string'},{type: 'required'}],
+  school_name: [{type: 'string'},{type: 'required'}],
   principal_email: [{type: 'string'},{type: 'required'},{type: 'email'}],
   principal_phone: [{type: 'string'},{type: 'required'}],
   principal_name: [{type: 'string'},{type: 'required'}],
@@ -23,6 +25,8 @@ router.post('/', CheckLogined, CheckAdmin, function (req, res, next) {
   let data = {
     name: httpReq.body.name || null,
     introduction: httpReq.body.introduction || null,
+    competition_area: httpReq.body.competition_area || null,
+    school_name: httpReq.body.school_name || null,
     principal_email: httpReq.body.principal_email || null,
     principal_phone: httpReq.body.principal_name || null,
     principal_name: httpReq.body.principal_name || null,

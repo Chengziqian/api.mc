@@ -18,6 +18,7 @@ const RaceItem = require('./routes/Race/{id}');
 const RaceApply = require('./routes/Race/apply');
 const Teacher = require('./routes/Admin/teacher');
 const TeacherItem = require('./routes/Admin/teacherItem');
+const Options = require('./routes/Options/{key}');
 const AddTokenTime = require('./middleware/AddTokenTime');
 const app = express();
 const ScheduleJob = require('./libs/ScheduleJob');
@@ -45,6 +46,7 @@ app.use('/race', RaceItem);
 app.use('/race', RaceApply);
 app.use('/admin', Teacher);
 app.use('/admin', TeacherItem);
+app.use('/options', Options);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
