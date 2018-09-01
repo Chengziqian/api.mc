@@ -39,10 +39,10 @@ exports.up = function(db) {
     })
   }
 
-  let institute = [
+  let college = [
     {
       name: '学院',
-      alias: 'institute',
+      alias: 'college',
       children: [
         {name: '信息与通信工程学院'},
         {name: '电子科学与工程学院(示范性微电子学院)'},
@@ -75,7 +75,7 @@ exports.up = function(db) {
     name: {type: 'string', notNull: true},
     root_id: {type: 'int', notNull: true, defaultValue: 0}
   }, function () {
-    insertOptions(institute, 0);
+    insertOptions(college, 0);
   });
 };
 
