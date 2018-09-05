@@ -5,6 +5,7 @@ const CheckLogined = require('../../middleware/CheckLogined');
 const CheckAdmin = require('../../middleware/CheckAdmin');
 const validate = require('../../libs/validate');
 const moment = require('moment');
+const createError = require('http-errors');
 
 let roles = {
   name: [{type: 'string'},{type: 'required'}],
@@ -22,6 +23,9 @@ router.post('/', CheckLogined, CheckAdmin, function (req, res, next) {
     if (err) next(err);
     else next();
   })
+}, function(req, res, next) {
+  if (moment(req.body.start_time).isAfter(moment(req.body.end_time))) next(createError(422, {message: {time: ['日期范围不合法']}}))
+  else next();
 }, function (httpReq, httpRes, next) {
   let data = {
     name: httpReq.body.name || null,
