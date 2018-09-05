@@ -1,5 +1,3 @@
-const DB = require('./DB_Service');
-const mysql = require('mysql');
 const createError = require('http-errors');
 const moment = require('moment');
 /**

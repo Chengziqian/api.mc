@@ -12,7 +12,8 @@ function createConnection(config) {
     user: config.local.user,
     password: config.local.password,
     database: config.local.database,
-    multipleStatements: config.local.multipleStatements
+    multipleStatements: config.local.multipleStatements,
+    dateStrings: true
   });
   return {
     INSERT: function (tableName, data) {
