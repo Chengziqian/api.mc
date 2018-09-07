@@ -7,6 +7,8 @@ const CheckAdmin = require('../../middleware/CheckAdmin');
 const CheckExceptStudent = require('../../middleware/CheckExceptStudent');
 const validate = require('../../libs/validate');
 const ExcelCreater = require('./CreateMembersInfoExcel');
+const moment = require('moment');
+
 router.get('/:id',CheckLogined, function (httpReq, httpRes, next) {
   DB.GET('race', 'id', httpReq.params.id).then(r => {
     if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
@@ -26,12 +28,21 @@ router.put('/:id', CheckLogined, CheckAdmin, function (httpReq, httpRes, next) {
     if (err) next(err);
     else next();
   })
+}, function(req, res, next) {
+  if (moment(req.body.start_time).isAfter(moment(req.body.end_time))) next(createError(422, {message: {time: ['日期范围不合法']}}))
+  else next();
 }, function (httpReq, httpRes, next) {
   let data = {
     name: httpReq.body.name || null,
     introduction: httpReq.body.introduction || null,
-    start_time: httpReq.body.start_time || null,
-    end_time: httpReq.body.end_time || null,
+    competition_area: httpReq.body.competition_area || null,
+    school_name: httpReq.body.school_name || null,
+    principal_email: httpReq.body.principal_email || null,
+    principal_phone: httpReq.body.principal_name || null,
+    principal_name: httpReq.body.principal_name || null,
+    start_time: moment(httpReq.body.start_time).format('YYYY-MM-DD HH:mm:ss') || null,
+    end_time: moment(httpReq.body.end_time).format('YYYY-MM-DD HH:mm:ss') || null,
+    create_user_id: httpReq.USER.id,
     update_user_id: httpReq.USER.id
   };
   DB.SAVE('race', 'id', httpReq.params.id, data).then(r => {
