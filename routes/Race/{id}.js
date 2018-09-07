@@ -13,7 +13,7 @@ router.get('/:id',CheckLogined, function (httpReq, httpRes, next) {
   DB.GET('race', 'id', httpReq.params.id).then(r => {
     if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
     let data = r[0];
-    httpRes.status(200).send(r[0]);
+    httpRes.status(200).send(data);
   }).catch(e => next(e));
 });
 
