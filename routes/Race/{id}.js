@@ -79,6 +79,7 @@ router.get('/:id/members', CheckLogined, CheckExceptStudent, function (httpReq, 
       competition_type: o.competition_type,
       school_name: race_school_name || o.school_name,
       major: o.major,
+      college: o.college,
       school_number: o.school_number
     }));
     httpRes.status(200).send(r);
