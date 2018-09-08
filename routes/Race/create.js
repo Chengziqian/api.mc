@@ -46,7 +46,7 @@ router.post('/', CheckLogined, CheckAdmin, function (req, res, next) {
 });
 
 router.get('/', CheckLogined, CheckAdmin, function (req, res, next) {
-  DB.GET('race', null, null).then(r => res.status(200).send(r)).catch(e => next(e))
+  DB.GET_ALL('race').then(r => res.status(200).send(r)).catch(e => next(e))
 });
 
 module.exports = router;

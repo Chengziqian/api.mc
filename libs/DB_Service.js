@@ -56,29 +56,25 @@ function createConnection(config) {
     GET: function (tableName, findFieldName, findValue, options) {
       return new Promise((resolve, reject) => {
         let sql;
-        if (findValue && findFieldName) {
-          if (options && options === 'first'){
-            sql = 'SELECT * FROM ?? WHERE ?? = ? ORDER BY `create_time` DESC LIMIT 1';
-          } else {
-            sql = 'SELECT * FROM ?? WHERE ?? = ?';
-          }
-          connection.query(sql, [tableName, findFieldName, findValue],
-            (err, res, field) => {
-              if (err) reject(err);
-              else resolve(res);
-            });
+        if (options && options === 'first'){
+          sql = 'SELECT * FROM ?? WHERE ?? = ? ORDER BY `create_time` DESC LIMIT 1';
         } else {
-          if (options && options === 'first') {
-            sql = 'SELECT * FROM ?? ORDER BY `create_time` DESC LIMIT 1';
-          } else {
-            sql = 'SELECT * FROM ??';
-          }
-          connection.query(sql, [tableName],
-            (err, res, field) => {
-              if (err) reject(err);
-              else resolve(res);
-            });
+          sql = 'SELECT * FROM ?? WHERE ?? = ?';
         }
+        connection.query(sql, [tableName, findFieldName, findValue],
+          (err, res, field) => {
+            if (err) reject(err);
+            else resolve(res);
+          });
+      });
+    },
+    GET_ALL: function (tableName) {
+      return new Promise((resolve, reject) => {
+        connection.query('SELECT * FROM ??', [tableName],
+          (err, res, field) => {
+            if (err) reject(err);
+            else resolve(res);
+          });
       });
     },
     DELETE_EXPIRED: function (tableName) {
