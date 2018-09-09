@@ -42,6 +42,25 @@ function createConnection(config) {
           });
       });
     },
+    SAVE_IN_CONDITIONS: function (tableName, conditionsObj, changeData) {
+      let sql = '';
+      for (let key in conditionsObj) {
+        let s = " ?? = ? AND";
+        if (conditionsObj.hasOwnProperty(key))
+          s = mysql.format(s, [key, conditionsObj[key]])
+        sql += s;
+      }
+      sql = sql.slice(0, sql.length - 3);
+      let table_sql = 'UPDATE ?? SET ? WHERE';
+      table_sql = mysql.format(table_sql, [tableName, changeData]);
+      console.log(table_sql + sql);
+      return new Promise ((resolve, reject) => {
+        connection.query(table_sql + sql, (err, res, field) => {
+          if (err) reject(err);
+          else resolve(res);
+        })
+      })
+    },
     JOIN_GET: function(relatedTableName, getTableName, foreignKey, findField ,findValue) {
       return new Promise((resolve, reject) => {
         let sql = "SELECT DISTINCT b.* FROM ?? a JOIN ?? b ON a.?? = b.`id` WHERE ?? = ?";
@@ -67,6 +86,24 @@ function createConnection(config) {
             else resolve(res);
           });
       });
+    },
+    GET_IN_CONDITIONS: function (tableName, conditionsObj) {
+      let sql = '';
+      for (let key in conditionsObj) {
+        let s = " ?? = ? AND";
+        if (conditionsObj.hasOwnProperty(key))
+          s = mysql.format(s, [key, conditionsObj[key]])
+        sql += s;
+      }
+      sql = sql.slice(0, sql.length - 3);
+      let table_sql = 'SELECT * FROM ?? WHERE';
+      table_sql = mysql.format(table_sql, [tableName]);
+      return new Promise ((resolve, reject) => {
+        connection.query(table_sql + sql, (err, res, field) => {
+          if (err) reject(err);
+          else resolve(res);
+        })
+      })
     },
     GET_ALL: function (tableName) {
       return new Promise((resolve, reject) => {

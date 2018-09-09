@@ -64,7 +64,7 @@ router.get('/:id/members', CheckLogined, CheckExceptStudent, function (httpReq, 
     else {
       race_competition_area = r[0].competition_area;
       race_school_name = r[0].school_name;
-      return DB.JOIN_GET('users_races', 'users', 'user_id', 'race_id', httpReq.params.id)
+      return DB.JOIN_GET('users_races', 'apply_user_info', 'info_id', 'race_id', httpReq.params.id)
     }
   }).then(r => {
     r = r.map(o => ({
@@ -92,7 +92,7 @@ router.get('/:id/download', CheckLogined, CheckExceptStudent, function (req, res
     if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
     else {
       race = r[0];
-      return DB.JOIN_GET('users_races', 'users', 'user_id', 'race_id', req.params.id)
+      return DB.JOIN_GET('users_races', 'apply_user_info', 'info_id', 'race_id', req.params.id)
     }
   }).then(r => {
     items = r.map((o, index)=> ({

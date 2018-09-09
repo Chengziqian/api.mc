@@ -24,6 +24,7 @@ router.post('/apply/:id',CheckLogined, function(req, res, next){
     else next()
   })
 }, function (httpReq, httpRes, next) {
+  let info_id = null;
   DB.GET('race', 'id', httpReq.params.id).then(r => {
     if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
     else {
@@ -38,12 +39,17 @@ router.post('/apply/:id',CheckLogined, function(req, res, next){
         competition_type: httpReq.body.competition_type || null,
         school_name: httpReq.body.school_name || null,
         major: httpReq.body.major || null,
-        school_number: httpReq.body.school_number  || null
+        school_number: httpReq.body.school_number  || null,
+        user_id: httpReq.USER.id
       };
-      return DB.SAVE('users', 'id', httpReq.USER.id, data);
+      return DB.INSERT('apply_user_info', data);
     }
   }).then(r => {
-    return DB.INSERT('users_races',{user_id: httpReq.USER.id, race_id:httpReq.params.id})
+    info_id = r.insertId;
+    return DB.GET_IN_CONDITIONS('users_races', {user_id: httpReq.USER.id, race_id: httpReq.params.id});
+  }).then(r => {
+    if (r.length === 0) return DB.INSERT('users_races',{user_id: httpReq.USER.id, race_id:httpReq.params.id, info_id: info_id});
+    else return DB.SAVE_IN_CONDITIONS('users_races', {user_id: httpReq.USER.id, race_id:httpReq.params.id}, {info_id: info_id});
   }).then(r => httpRes.sendStatus(200)).catch(e => next(e));
 });
 
