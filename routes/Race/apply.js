@@ -31,7 +31,7 @@ router.post('/apply/:id',CheckLogined, function(req, res, next){
       if (!(moment().isBetween(moment(r[0].start_time), moment(r[0].end_time)))) return Promise.reject(createError(400, {message: '比赛报名未开始或已过期'}));
       let data = {
         truename: httpReq.body.truename || null,
-        gender: httpReq.body.gender || null,
+        gender: httpReq.body.gender,
         qq_number: httpReq.body.qq_number || null,
         phone: httpReq.body.phone || null,
         id_code: httpReq.body.id_code || null,
