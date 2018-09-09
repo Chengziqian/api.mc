@@ -19,13 +19,14 @@ function randomString(len) {
 
 router.post('/resetPwd', function(req, res, next){
   let valid = {
-    email: [{type:'required'},{type:'string'},{type: 'email'}]
-  }
+    email: [{type:'required'},{type:'string'},{type: 'email'}],
+    captcha: [{type:'required'},{type: 'string'}]
+  };
   validate(req.body, valid, function (err) {
     if (err) next(err);
     else next();
   })
-}, function (httpReq, httpRes, next) {
+}, CheckCaptcha, function (httpReq, httpRes, next) {
   let user = {};
   let token = '';
   DB.GET('users', 'email', httpReq.body.email).then(res => {
@@ -53,7 +54,7 @@ router.put('/resetPwd',function (req, res, next) {
     password: [{type:'required'},{type:'string'}],
     id: [{type:'required'},{type: 'integer'}],
     reset: [{type:'required'},{type: 'string'}]
-  }
+  };
   validate(req.body, valid, function (err) {
     if (err) next(err);
     else next();
