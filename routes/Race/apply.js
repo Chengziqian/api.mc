@@ -14,7 +14,7 @@ let valid = {
   id_code: [{type: 'string'},{type: 'required'}],
   college: [{type: 'string'},{type: 'required'}],
   competition_type: [{type: 'integer'},{type: 'required'}],
-  school_name: [{type: 'string'},{type: 'required'}],
+  school_name: [{type: 'string'}],
   major: [{type: 'string'},{type: 'required'}],
   school_number: [{type: 'string'},{type: 'required'}]
 };
@@ -29,16 +29,16 @@ router.post('/apply/:id',CheckLogined, function(req, res, next){
     else {
       if (!(moment().isBetween(moment(r[0].start_time), moment(r[0].end_time)))) return Promise.reject(createError(400, {message: '比赛报名未开始或已过期'}));
       let data = {
-        truename: httpReq.body.truename,
-        gender: httpReq.body.gender,
-        qq_number: httpReq.body.qq_number,
-        phone: httpReq.body.phone,
-        id_code: httpReq.body.id_code,
-        college: httpReq.body.college,
-        competition_type: httpReq.body.competition_type,
-        school_name: httpReq.body.school_name,
-        major: httpReq.body.major,
-        school_number: httpReq.body.school_number
+        truename: httpReq.body.truename || null,
+        gender: httpReq.body.gender || null,
+        qq_number: httpReq.body.qq_number || null,
+        phone: httpReq.body.phone || null,
+        id_code: httpReq.body.id_code || null,
+        college: httpReq.body.college || null,
+        competition_type: httpReq.body.competition_type || null,
+        school_name: httpReq.body.school_name || null,
+        major: httpReq.body.major || null,
+        school_number: httpReq.body.school_number  || null
       };
       return DB.SAVE('users', 'id', httpReq.USER.id, data);
     }
