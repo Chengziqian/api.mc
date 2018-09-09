@@ -5,6 +5,7 @@ const createError = require('http-errors');
 const mailSender = require('../../libs/Mail_Service');
 const crypto = require('crypto');
 const validate = require('../../libs/validate');
+const CheckCaptcha = require('../../middleware/CheckCaptcha');
 
 function randomString(len) {
   len = len || 32;
