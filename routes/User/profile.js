@@ -24,12 +24,12 @@ router.put('/profile',CheckLogined ,function(req, res, next) {
 }, function (httpReq, httpRes, next) {
   let data = {
     truename: httpReq.body.truename || null,
-    gender: httpReq.body.gender || null,
+    gender: httpReq.body.gender,
     qq_number: httpReq.body.qq_number || null,
     phone: httpReq.body.phone || null,
     id_code: httpReq.body.id_code || null,
     college: httpReq.body.college || null,
-    competition_type: httpReq.body.competition_type || null,
+    competition_type: httpReq.body.competition_type,
     school_name: httpReq.body.school_name || null,
     major: httpReq.body.major || null,
     school_number: httpReq.body.school_number || null
