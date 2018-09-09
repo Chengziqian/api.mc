@@ -45,7 +45,7 @@ router.post('/', CheckLogined, CheckAdmin, function (req, res, next) {
   }).catch(e => next(e));
 });
 
-router.get('/', CheckLogined, CheckAdmin, function (req, res, next) {
+router.get('/', CheckLogined, function (req, res, next) {
   DB.GET_ALL('race').then(r => res.status(200).send(r)).catch(e => next(e))
 });
 
