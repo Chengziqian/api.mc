@@ -9,7 +9,10 @@ router.get('/applyInfo/:raceId',CheckLogined, function (httpReq, httpRes, next) 
     .then(r => {
       if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
       else return DB.GET('apply_user_info', 'id', r[0].info_id)
-    }).then(r => httpRes.status(200).send(r[0])).catch(e => next(e));
+    }).then(r => {
+      if (r.lengrh === 0) return Promise.reject(createError(400, {message: '无此用户信息'}));
+      else httpRes.status(200).send(r[0])
+    }).catch(e => next(e));
 });
 
 module.exports = router;
