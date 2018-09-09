@@ -13,6 +13,9 @@ router.get('/:id',CheckLogined, function (httpReq, httpRes, next) {
   DB.GET('race', 'id', httpReq.params.id).then(r => {
     if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
     let data = r[0];
+    if (moment().isBetween(moment(data.start_time), moment(data.end_time))) data.status = '比赛进行中';
+    else if (moment().isBefore(moment(data.start_time))) data.status = '比赛未开始';
+    else data.status = '比赛已结束';
     httpRes.status(200).send(data);
   }).catch(e => next(e));
 });
