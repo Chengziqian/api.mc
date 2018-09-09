@@ -36,7 +36,7 @@ router.post('/apply/:id',CheckLogined, function(req, res, next){
         phone: httpReq.body.phone || null,
         id_code: httpReq.body.id_code || null,
         college: httpReq.body.college || null,
-        competition_type: httpReq.body.competition_type || null,
+        competition_type: httpReq.body.competition_type,
         school_name: httpReq.body.school_name || '',
         major: httpReq.body.major || null,
         school_number: httpReq.body.school_number  || null,
