@@ -20,7 +20,7 @@ router.get('/:id',CheckLogined, function (httpReq, httpRes, next) {
   }).catch(e => next(e));
 });
 
-router.put('/:id', CheckLogined, CheckAdmin, function (httpReq, httpRes, next) {
+router.put('/:id', CheckLogined, CheckExceptStudent, function (httpReq, httpRes, next) {
   let roles = {
     name: [{type: 'string'},{type: 'required'}],
     introduction: [{type: 'string'}],
@@ -53,7 +53,7 @@ router.put('/:id', CheckLogined, CheckAdmin, function (httpReq, httpRes, next) {
   }).catch(e => next(e));
 });
 
-router.delete('/:id', CheckLogined, CheckAdmin, function (httpReq, httpRes, next) {
+router.delete('/:id', CheckLogined, CheckExceptStudent, function (httpReq, httpRes, next) {
   DB.GET('race', 'id', httpReq.params.id).then(r => {
     if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
     else if (moment().isBetween(moment(r[0].start_time), moment(r[0].end_time))) return Promise.reject(createError(400, {message: '不可删除进行中的比赛'}));
