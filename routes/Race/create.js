@@ -48,8 +48,8 @@ router.post('/', CheckLogined, CheckAdmin, function (req, res, next) {
 router.get('/', CheckLogined, function (req, res, next) {
   DB.GET_ALL('race').then(r => {
     r.forEach(o => {
-      if (moment().isBetween(moment(o.start_time), moment(o.end_time))) o.status = '比赛进行中'
-      else if (moment().isBefore(moment(o.start_time))) o.status = '比赛未开始'
+      if (moment().isBetween(moment(o.start_time), moment(o.end_time))) o.status = '比赛进行中';
+      else if (moment().isBefore(moment(o.start_time))) o.status = '比赛未开始';
       else o.status = '比赛已结束'
     });
     res.status(200).send(r)

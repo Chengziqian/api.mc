@@ -54,7 +54,11 @@ router.put('/:id', CheckLogined, CheckAdmin, function (httpReq, httpRes, next) {
 });
 
 router.delete('/:id', CheckLogined, CheckAdmin, function (httpReq, httpRes, next) {
-  DB.DELETE('race', 'id', httpReq.params.id).then(r => {
+  DB.GET('race', 'id', httpReq.params.id).then(r => {
+    if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
+    else if (moment().isBetween(moment(r[0].start_time), moment(r[0].end_time))) return Promise.reject(createError(400, {message: '不可删除进行中的比赛'}));
+    else return DB.DELETE('race', 'id', httpReq.params.id)
+  }).then(r => {
     httpRes.sendStatus(200);
   }).catch(e => next(e));
 });
