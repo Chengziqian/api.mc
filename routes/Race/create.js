@@ -3,6 +3,7 @@ const router = express.Router();
 const DB = require('../../libs/DB_Service');
 const CheckLogined = require('../../middleware/CheckLogined');
 const CheckAdmin = require('../../middleware/CheckAdmin');
+const CheckExceptStudent = require('../../middleware/CheckExceptStudent');
 const validate = require('../../libs/validate');
 const moment = require('moment');
 const createError = require('http-errors');
@@ -18,7 +19,7 @@ let roles = {
   start_time: [{type: 'date'},{type: 'required'}],
   end_time: [{type: 'date'},{type: 'required'}]
 };
-router.post('/', CheckLogined, CheckAdmin, function (req, res, next) {
+router.post('/', CheckLogined, CheckExceptStudent, function (req, res, next) {
   validate(req.body, roles, function (err) {
     if (err) next(err);
     else next();

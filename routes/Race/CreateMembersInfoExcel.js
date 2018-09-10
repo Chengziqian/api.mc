@@ -19,7 +19,10 @@ module.exports = function (headerData, principalInfo ,itemsData) {
     [{value: headerData, style: styles.middle}],
     [{value: principalInfo, style: styles.middle}]
   ];
-  const columns = Object.getOwnPropertyNames(itemsData[0]).length;
+
+  let columns = 10;
+  if (itemsData.length !== 0)
+  columns = Object.getOwnPropertyNames(itemsData[0]).length;
 
   const map = {
     index: {title:'序号', width: '5'},
@@ -63,7 +66,7 @@ module.exports = function (headerData, principalInfo ,itemsData) {
     }
   }
 
-  const dataset = itemsData;
+  let dataset = itemsData;
   dataset.sort(function (a, b) {
     return a.competition_type - b.competition_type
   });
