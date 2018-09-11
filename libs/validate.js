@@ -65,6 +65,12 @@ module.exports = function (data, roles, callback) {
               }
               break;
             case (/^date$/.test(o.type)):
+              try {
+                moment(data[key]);
+              } catch (e) {
+                pushError(errorList, key, key + ' is invalid');
+                break;
+              }
               if (!moment(data[key]).isValid()) {
                 if (o.errorMessage) {
                   pushError(errorList, key, o.errorMessage);
