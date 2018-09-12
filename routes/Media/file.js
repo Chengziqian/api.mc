@@ -82,7 +82,7 @@ router.get('/file/:filename/info', GetLogined, function (req, res, next) {
         let data = {
           filename: file.filename,
           size: null,
-          type: null,
+          type: 'unknown',
           truename: file.truename || file.filename + '.' + file.extension
         };
         fs.stat(path.join(__dirname, '../../storage/' + file.filename), function (err, stat) {
