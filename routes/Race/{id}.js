@@ -24,8 +24,14 @@ router.put('/:id', CheckLogined, CheckExceptStudent, function (httpReq, httpRes,
   let roles = {
     name: [{type: 'string'},{type: 'required'}],
     introduction: [{type: 'string'}],
+    competition_area: [{type: 'string'},{type: 'required'}],
+    school_name: [{type: 'string'},{type: 'required'}],
+    principal_email: [{type: 'string'},{type: 'required'},{type: 'email'}],
+    principal_phone: [{type: 'string'},{type: 'required'}],
+    principal_name: [{type: 'string'},{type: 'required'}],
     start_time: [{type: 'date'},{type: 'required'}],
-    end_time: [{type: 'date'},{type: 'required'}]
+    end_time: [{type: 'date'},{type: 'required'}],
+    attachment: [{type: 'string'}]
   };
   validate(httpReq.body, roles, function (err) {
     if (err) next(err);
@@ -46,7 +52,8 @@ router.put('/:id', CheckLogined, CheckExceptStudent, function (httpReq, httpRes,
     start_time: moment(httpReq.body.start_time).format('YYYY-MM-DD HH:mm:ss') || null,
     end_time: moment(httpReq.body.end_time).format('YYYY-MM-DD HH:mm:ss') || null,
     create_user_id: httpReq.USER.id,
-    update_user_id: httpReq.USER.id
+    update_user_id: httpReq.USER.id,
+    attachment: httpReq.attachment || null
   };
   DB.SAVE('race', 'id', httpReq.params.id, data).then(r => {
     httpRes.sendStatus(200);

@@ -1,4 +1,5 @@
 .idea
 node_modules/
+stroage/
 database.json
 .config.js

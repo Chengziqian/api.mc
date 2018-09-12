@@ -17,7 +17,8 @@ let roles = {
   principal_phone: [{type: 'string'},{type: 'required'}],
   principal_name: [{type: 'string'},{type: 'required'}],
   start_time: [{type: 'date'},{type: 'required'}],
-  end_time: [{type: 'date'},{type: 'required'}]
+  end_time: [{type: 'date'},{type: 'required'}],
+  attachment: [{type: 'string'}]
 };
 router.post('/', CheckLogined, CheckExceptStudent, function (req, res, next) {
   validate(req.body, roles, function (err) {
@@ -39,7 +40,8 @@ router.post('/', CheckLogined, CheckExceptStudent, function (req, res, next) {
     start_time: moment(httpReq.body.start_time).format('YYYY-MM-DD HH:mm:ss') || null,
     end_time: moment(httpReq.body.end_time).format('YYYY-MM-DD HH:mm:ss') || null,
     create_user_id: httpReq.USER.id,
-    update_user_id: httpReq.USER.id
+    update_user_id: httpReq.USER.id,
+    attachment: httpReq.attachment || null
   };
   DB.INSERT('race', data).then(r => {
     httpRes.status(200).send({id: r.insertId});

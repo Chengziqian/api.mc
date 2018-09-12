@@ -13,7 +13,7 @@ module.exports = function (httpReq, httpRes, next) {
   let token = httpReq.headers['api-token'] || httpReq.headers['Api-Token'];
   let api_token = {};
   DB.GET('api_token', 'token', token, 'first').then(res => {
-    if (res.length === 0) return Promise.reject(createError(401, {message:'请先登录'}));
+    if (res.length === 0) return Promise.reject(null);
     else {
       api_token = res[0];
       old_token = api_token.token;
@@ -21,14 +21,17 @@ module.exports = function (httpReq, httpRes, next) {
         api_token.ip === getClientIp(httpReq)) {
         return DB.GET('users', 'id', res[0].user_id);
       } else {
-        return Promise.reject(createError(401, {message:'请先登录'}));
+        return Promise.reject(null);
       }
     }
   }).then(res => {
-    if (res.length === 0) return Promise.reject(createError(401, {message:'请先登录'}));
+    if (res.length === 0) return Promise.reject(null);
     else {
       httpReq.USER = res[0];
       next();
     }
-  }).catch(e => next(e))
+  }).catch(e => {
+    httpReq.USER = null;
+    next();
+  })
 };
