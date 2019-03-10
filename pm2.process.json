@@ -4,12 +4,6 @@
       "name": "api.mc",
       "script": "./bin/www",
       "log_date_format": "YYYY-MM-DD HH:mm Z",
-      "error_file": "./log/error.log",
-      "out_file": "./log/stdout.log",
-      "instances": 1,
-      "watch": true,
-      "merge_logs": true,
-      "exec_mode": "fork",
     }
   ]
 }
