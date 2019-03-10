@@ -38,8 +38,8 @@ router.post('/login', function(req, res, next) {
           let html = '<h1>数学竞赛激活邮件</h1>' +
             '<hr>' +
             '<p>请点击以下链接激活</p>' +
-            '<a href="'+ 'http://' + httpReq.headers.host +
-            process.env.APP_ACTIVE_ROUTE + '?id=' + res[0].id + '&active=' + res[0].active_code +'">'+ 'http://' +httpReq.headers.host +
+            '<a href="'+ 'http://' + 'http://www.math.uestc.edu.cn/mc/' +
+            process.env.APP_ACTIVE_ROUTE + '?id=' + res[0].id + '&active=' + res[0].active_code +'">'+ 'http://' +'http://www.math.uestc.edu.cn/mc/' +
             process.env.APP_ACTIVE_ROUTE + '?id=' + res[0].id + '&active=' + res[0].active_code + '</a>';
           mailSender(res[0].email, "数学竞赛", "激活邮件", html).catch(e => console.log(e));
           return Promise.reject(createError(401, {message:'账户未激活(已重发激活邮件)'}));
