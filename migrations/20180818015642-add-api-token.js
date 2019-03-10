@@ -25,7 +25,7 @@ exports.up = function(db) {
   }).then(function (res) {
   }, function (err) {
     throw err
-  });;
+  });
 };
 
 exports.down = function(db) {
