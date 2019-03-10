@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const uuid = require('uuid/v1');
 const moment = require('moment');
 const validate = require('../../libs/validate');
+const mailSender = require('../../libs/Mail_Service');
 const DB = require('../../libs/DB_Service');
 const createError = require('http-errors');
 const CheckCaptcha = require('../../middleware/CheckCaptcha');
@@ -34,7 +35,14 @@ router.post('/login', function(req, res, next) {
       let psw = crypto.createHash('sha256').update(data.password).digest('hex');
       if (res[0].password === psw) {
         if (res[0].status === 0) {
-          return Promise.reject(createError(401, {message:'账户未激活'}));
+          let html = '<h1>数学竞赛激活邮件</h1>' +
+            '<hr>' +
+            '<p>请点击以下链接激活</p>' +
+            '<a href="'+ 'http://' + httpReq.headers.host +
+            process.env.APP_ACTIVE_ROUTE + '?id=' + res[0].id + '&active=' + res[0].active_code +'">'+ 'http://' +httpReq.headers.host +
+            process.env.APP_ACTIVE_ROUTE + '?id=' + res[0].id + '&active=' + res[0].active_code + '</a>';
+          mailSender(res[0].email, "数学竞赛", "激活邮件", html).catch(e => console.log(e));
+          return Promise.reject(createError(401, {message:'账户未激活(已重发激活邮件)'}));
         } else {
           user = res[0];
           token = {
