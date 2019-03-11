@@ -31,7 +31,7 @@ router.post('/reActive', function(req, res, next){
       '<a href="'+ process.env.APP_BASE_URL +
       process.env.APP_RESET_ROUTE +'?id=' + user.id + '&reset=' + token +'">'+ process.env.APP_BASE_URL +
       process.env.APP_RESET_ROUTE + '?id=' + user.id + '&reset=' + token + '</a>';
-    return mailSender(user.email, "数学竞赛", "重置邮件", html);
+    return mailSender(user.email, "数学竞赛", "激活邮件", html);
   }).then(res => {
     httpRes.sendStatus(200);
   }).catch(e => next(e))
