@@ -17,6 +17,7 @@ try {
 
 process.env.APP_ACTIVE_ROUTE = cc.APP_ACTIVE_ROUTE;
 process.env.APP_RESET_ROUTE = cc.APP_RESET_ROUTE;
+process.env.APP_BASE_URL = cc.APP_BASE_URL;
 /**
  * Get port from environment and store in Express.
  */

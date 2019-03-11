@@ -44,8 +44,8 @@ router.post('/register', function (req, res, next) {
       let html = '<h1>数学竞赛激活邮件</h1>' +
         '<hr>' +
         '<p>请点击以下链接激活</p>' +
-        '<a href="'+ 'http://' + 'http://www.math.uestc.edu.cn/mc/' +
-        process.env.APP_ACTIVE_ROUTE + '?id=' + insertId + '&active=' + data.active_code +'">'+ 'http://' +'http://www.math.uestc.edu.cn/mc/' +
+        '<a href="' + process.env.APP_BASE_URL +
+        process.env.APP_ACTIVE_ROUTE + '?id=' + insertId + '&active=' + data.active_code +'">'+ process.env.APP_BASE_URL +
         process.env.APP_ACTIVE_ROUTE + '?id=' + insertId + '&active=' + data.active_code + '</a>';
       mailSender(data.email, "数学竞赛", "激活邮件", html).catch(e => console.log(e));
       httpRes.sendStatus(200);

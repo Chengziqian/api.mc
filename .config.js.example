@@ -9,5 +9,6 @@ module.exports = {
     }
   },
   APP_ACTIVE_ROUTE: 'your app active route',
-  APP_RESET_ROUTE: 'your app reset password route'
+  APP_RESET_ROUTE: 'your app reset password route',
+  APP_BASE_URL: 'your app base url'
 }

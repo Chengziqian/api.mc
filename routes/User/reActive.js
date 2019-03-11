@@ -25,11 +25,11 @@ router.post('/reActive', function(req, res, next){
       token = user.active_code
     }
   }).then(res => {
-    let html = '<h1>数学竞赛重置密码邮件</h1>' +
+    let html = '<h1>数学竞赛激活邮件</h1>' +
       '<hr>' +
-      '<p>请点击以下链接跳转至重置密码页面</p>' +
-      '<a href="'+ 'http://' + 'http://www.math.uestc.edu.cn/mc/' +
-      process.env.APP_RESET_ROUTE +'?id=' + user.id + '&reset=' + token +'">'+ 'http://' + 'http://www.math.uestc.edu.cn/mc/' +
+      '<p>请点击以下链接激活</p>' +
+      '<a href="'+ process.env.APP_BASE_URL +
+      process.env.APP_RESET_ROUTE +'?id=' + user.id + '&reset=' + token +'">'+ process.env.APP_BASE_URL +
       process.env.APP_RESET_ROUTE + '?id=' + user.id + '&reset=' + token + '</a>';
     return mailSender(user.email, "数学竞赛", "重置邮件", html);
   }).then(res => {
