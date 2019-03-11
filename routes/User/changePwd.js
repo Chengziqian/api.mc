@@ -6,8 +6,9 @@ const crypto = require('crypto');
 const validate = require('../../libs/validate');
 const CheckLogined = require('../../middleware/CheckLogined');
 let valid = {
-  password_old: [{type:'required'},{type:'string'}],
-  password_new: [{type:'required'},{type: 'string'}]
+  password_old: [{type:'required'},{type:'string'},{type: 'alias', text: '旧密码'}],
+  password_new: [{type:'required'},{type: 'string'},{type: 'alias', text: '新密码'}],
+  origin_password_new: [{type:'required'},{type: 'string'},{type: 'length|6-18'},{type: 'alias', text: '新密码'}]
 };
 
 router.put('/changePwd', CheckLogined, function (httpReq, httpRes, next) {

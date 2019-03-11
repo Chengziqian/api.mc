@@ -8,10 +8,10 @@ const CheckCaptcha = require('../../middleware/CheckCaptcha');
 const CheckEmailRepeat = require('../../middleware/CheckEmaliRepeat');
 
 let valid = {
-  email: [{type:'required'},{type:'string'},{type: 'email'}],
-  password: [{type:'required'},{type: 'string'}],
-  captcha: [{type:'required'},{type: 'string'}],
-  origin_password: [{type:'required'},{type: 'string'},{type: 'length|6-18'}]
+  email: [{type:'required'},{type:'string'},{type: 'email'},{type: 'alias', text: '邮箱'}],
+  password: [{type:'required'},{type: 'string'},{type: 'alias', text: '密码'}],
+  captcha: [{type:'required'},{type: 'string'},{type: 'alias', text: '验证码'}],
+  origin_password: [{type:'required'},{type: 'string'},{type: 'length|6-18'},{type: 'alias', text: '密码'}]
 };
 
 function randomString(len) {

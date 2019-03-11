@@ -18,21 +18,30 @@ module.exports = function (data, roles, callback) {
   let errorList = {};
   for (let key in roles) {
     if (roles.hasOwnProperty(key)) {
+      let key_alias = null;
+      roles[key].forEach(o => {
+        if (/^alias$/.test(o.type)) {
+          key_alias = o.text
+        }
+      });
       if (data[key] !== null && data[key] !== undefined && data[key] !== '') {
         roles[key].forEach(o => {
           switch (true) {
+            case (/^alias$/.test(o.type)):
+              break;
             case (/^required$/.test(o.type)):
               break;
             case (/^length\|(\d+)-(\d+)$/.test(o.type)):
               var res = o.type.match(/^length\|(\d+)-(\d+)$/);
               var min = res[1], max = res[2];
-              console.log(min, max)
-              console.log(data[key])
               if (data[key].length < min || data[key].length > max) {
                 if(o.errorMessage) {
                   pushError(errorList, key, o.errorMessage);
                 } else {
-                  pushError(errorList, key,'the length of ' + key + 'must be between ' + min + ' and ' + max);
+                  if (key_alias)
+                    pushError(errorList, key, key_alias + '的长度必须在' + min + '到' + max + '之间');
+                  else
+                    pushError(errorList, key,'the length of ' + key + ' must be between ' + min + ' and ' + max);
                 }
               }
               break;
@@ -41,7 +50,10 @@ module.exports = function (data, roles, callback) {
                 if (o.errorMessage) {
                   pushError(errorList, key, o.errorMessage);
                 } else {
-                  pushError(errorList, key, key + ' is not a string');
+                  if (key_alias)
+                    pushError(errorList, key, key_alias + '不是一个字符串');
+                  else
+                    pushError(errorList, key, key + ' is not a string');
                 }
               }
               break;
@@ -50,7 +62,10 @@ module.exports = function (data, roles, callback) {
                 if (o.errorMessage) {
                   pushError(errorList, key, o.errorMessage);
                 } else {
-                  pushError(errorList, key, key + ' is not a number');
+                  if (key_alias)
+                    pushError(errorList, key, key_alias + '不是一个数字');
+                  else
+                    pushError(errorList, key, key + ' is not a number');
                 }
               }
               break;
@@ -59,18 +74,24 @@ module.exports = function (data, roles, callback) {
                 if (o.errorMessage) {
                   pushError(errorList, key, o.errorMessage);
                 } else {
-                  pushError(errorList, key, key + ' is a invalid email');
+                  if (key_alias)
+                    pushError(errorList, key, key_alias + '格式不正确');
+                  else
+                    pushError(errorList, key, key + ' is a invalid email');
                 }
               }
               break;
             case (/^regex:\/.*\/$/.test(o.type)):
-              let regex = new RegExp(o.type.match(/^regex:\/(.*)\/$/)[1])
+              let regex = new RegExp(o.type.match(/^regex:\/(.*)\/$/)[1]);
               if (regex) {
                 if (!regex.test(data[key])) {
                   if (o.errorMessage) {
                     pushError(errorList, key, o.errorMessage);
                   } else {
-                    pushError(errorList, key, key + ' is invalid');
+                    if (key_alias)
+                      pushError(errorList, key, key_alias + '格式非法');
+                    else
+                      pushError(errorList, key, key + ' is invalid');
                   }
                 }
               } else {
@@ -88,7 +109,10 @@ module.exports = function (data, roles, callback) {
                 if (o.errorMessage) {
                   pushError(errorList, key, o.errorMessage);
                 } else {
-                  pushError(errorList, key, key + ' is invalid');
+                  if (key_alias)
+                    pushError(errorList, key, key_alias + '格式非法');
+                  else
+                    pushError(errorList, key, key + ' is invalid');
                 }
               }
               break;
@@ -102,7 +126,10 @@ module.exports = function (data, roles, callback) {
             if (o.errorMessage) {
               pushError(errorList, key, o.errorMessage);
             } else {
-              pushError(errorList, key, key + ' is required');
+              if (key_alias)
+                pushError(errorList, key, key_alias + '必填');
+              else
+                pushError(errorList, key, key + ' is required');
             }
           }
         })

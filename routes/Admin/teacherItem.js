@@ -9,7 +9,7 @@ const mailSender = require('../../libs/Mail_Service');
 const crypto = require('crypto');
 
 let roles = {
-  access: [{type:'required'},{type:'integer'}]
+  access: [{type:'required'},{type:'integer'},{type: 'alias', text: '权限'}]
 };
 
 function randomString(len) {

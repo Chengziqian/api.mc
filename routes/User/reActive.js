@@ -8,8 +8,8 @@ const CheckCaptcha = require('../../middleware/CheckCaptcha');
 
 router.post('/reActive', function(req, res, next){
   let valid = {
-    email: [{type:'required'},{type:'string'},{type: 'email'}],
-    captcha: [{type:'required'},{type: 'string'}]
+    email: [{type:'required'},{type:'string'},{type: 'email'},{type: 'alias', text: '邮箱'}],
+    captcha: [{type:'required'},{type: 'string'},{type: 'alias', text: '验证码'}]
   };
   validate(req.body, valid, function (err) {
     if (err) next(err);

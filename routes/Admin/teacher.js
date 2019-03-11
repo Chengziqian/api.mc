@@ -9,8 +9,8 @@ const validate = require('../../libs/validate');
 const mailSender = require('../../libs/Mail_Service');
 
 let roles = {
-  email: [{type:'required'},{type:'string'},{type: 'email'}],
-  truename: [{type:'required'},{type:'string'}]
+  email: [{type:'required'},{type:'string'},{type: 'email'},{type: 'alias', text: '邮箱'}],
+  truename: [{type:'required'},{type:'string'},{type: 'alias', text: '真实姓名'}]
 };
 
 function randomString(len) {

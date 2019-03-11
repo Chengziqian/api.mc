@@ -52,7 +52,7 @@ router.put('/active', function (httpReq, httpRes, next) {
 });
 
 router.post('/active',function (req, res, next) {
-  validate(req.body, {email: [{type:'required'},{type:'string'},{type: 'email'}]}, function (err) {
+  validate(req.body, {email: [{type:'required'},{type:'string'},{type: 'email'},{type: 'alias', text: '邮箱'}]}, function (err) {
     if (err) next(err);
     else next()
   })

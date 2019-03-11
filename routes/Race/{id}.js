@@ -22,16 +22,16 @@ router.get('/:id',CheckLogined, function (httpReq, httpRes, next) {
 
 router.put('/:id', CheckLogined, CheckExceptStudent, function (httpReq, httpRes, next) {
   let roles = {
-    name: [{type: 'string'},{type: 'required'}],
-    introduction: [{type: 'string'}],
-    competition_area: [{type: 'string'},{type: 'required'}],
-    school_name: [{type: 'string'},{type: 'required'}],
-    principal_email: [{type: 'string'},{type: 'required'},{type: 'email'}],
-    principal_phone: [{type: 'string'},{type: 'required'}],
-    principal_name: [{type: 'string'},{type: 'required'}],
-    start_time: [{type: 'date'},{type: 'required'}],
-    end_time: [{type: 'date'},{type: 'required'}],
-    attachment: [{type: 'string'}]
+    name: [{type: 'string'},{type: 'required'},{type: 'alias', text: '名称'}],
+    introduction: [{type: 'string'},{type: 'alias', text: '介绍'}],
+    competition_area: [{type: 'string'},{type: 'required'},{type: 'alias', text: '地区'}],
+    school_name: [{type: 'string'},{type: 'required'},{type: 'alias', text: '学校名称'}],
+    principal_email: [{type: 'string'},{type: 'required'},{type: 'email'},{type: 'alias', text: '负责人邮箱'}],
+    principal_phone: [{type: 'string'},{type: 'required'},{type: 'alias', text: '负责人电话'}],
+    principal_name: [{type: 'string'},{type: 'required'},{type: 'alias', text: '负责人姓名'}],
+    start_time: [{type: 'date'},{type: 'required'},{type: 'alias', text: '开始时间'}],
+    end_time: [{type: 'date'},{type: 'required'},{type: 'alias', text: '结束时间'}],
+    attachment: [{type: 'string'},{type: 'alias', text: '附件'}]
   };
   validate(httpReq.body, roles, function (err) {
     if (err) next(err);

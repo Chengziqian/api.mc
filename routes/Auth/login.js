@@ -16,9 +16,9 @@ let getClientIp = function (req) {
     req.connection.socket.remoteAddress || '';
 };
 let logon_valid = {
-  email: [{type:'required'},{type:'string'},{type: 'email'}],
-  password: [{type:'required'},{type: 'string'}],
-  captcha: [{type:'required'},{type: 'string'}]
+  email: [{type:'required'},{type:'string'},{type: 'email'},{type: 'alias', text: '邮箱'}],
+  password: [{type:'required'},{type: 'string'},{type: 'alias', text: '密码'}],
+  captcha: [{type:'required'},{type: 'string'},{type: 'alias', text: '验证码'}]
 };
 router.post('/login', function(req, res, next) {
   validate(req.body, logon_valid, function (err) {

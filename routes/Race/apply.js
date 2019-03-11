@@ -7,16 +7,16 @@ const validate = require('../../libs/validate');
 const moment  =require('moment');
 
 let valid = {
-  truename: [{type: 'string'},{type: 'required'}],
-  gender: [{type: 'integer'},{type: 'required'}],
-  qq_number: [{type: 'string'},{type: 'required'}],
-  phone: [{type: 'string'},{type: 'required'}],
-  id_code: [{type: 'string'},{type: 'required'}],
-  college: [{type: 'string'},{type: 'required'}],
-  competition_type: [{type: 'integer'},{type: 'required'}],
-  school_name: [{type: 'string'}],
-  major: [{type: 'string'},{type: 'required'}],
-  school_number: [{type: 'string'},{type: 'required'}]
+  truename: [{type: 'string'},{type: 'required'},{type: 'alias', text: '真实姓名'}],
+  gender: [{type: 'integer'},{type: 'required'},{type: 'alias', text: '性别'}],
+  qq_number: [{type: 'string'},{type: 'required'},{type: 'alias', text: 'QQ号'}],
+  phone: [{type: 'string'},{type: 'required'},{type: 'alias', text: '电话'}],
+  id_code: [{type: 'string'},{type: 'required'},{type: 'alias', text: '身份证号'}],
+  college: [{type: 'string'},{type: 'required'},{type: 'alias', text: '学院'}],
+  competition_type: [{type: 'integer'},{type: 'required'},{type: 'alias', text: '竞赛类型'}],
+  school_name: [{type: 'string'},{type: 'alias', text: '学校名称'}],
+  major: [{type: 'string'},{type: 'required'},{type: 'alias', text: '专业'}],
+  school_number: [{type: 'string'},{type: 'required'},{type: 'alias', text: '学号'}]
 };
 router.post('/apply/:id',CheckLogined, function(req, res, next){
   validate(req.body, valid, function (err) {
