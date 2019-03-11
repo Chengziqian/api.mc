@@ -34,6 +34,7 @@ router.post('/register', function (req, res, next) {
 }, CheckCaptcha, CheckEmailRepeat, function (httpReq, httpRes, next) {
   let data = httpReq.body;
   delete data['captcha'];
+  delete data['origin_password'];
   data.status = 0;
   data.access = -1;
   data.type = 1;
