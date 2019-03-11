@@ -28,9 +28,9 @@ router.post('/reActive', function(req, res, next){
     let html = '<h1>数学竞赛激活邮件</h1>' +
       '<hr>' +
       '<p>请点击以下链接激活</p>' +
-      '<a href="'+ process.env.APP_BASE_URL +
-      process.env.APP_RESET_ROUTE +'?id=' + user.id + '&reset=' + token +'">'+ process.env.APP_BASE_URL +
-      process.env.APP_RESET_ROUTE + '?id=' + user.id + '&reset=' + token + '</a>';
+      '<a href="' + process.env.APP_BASE_URL +
+      process.env.APP_ACTIVE_ROUTE + '?id=' + insertId + '&active=' + data.active_code +'">'+ process.env.APP_BASE_URL +
+      process.env.APP_ACTIVE_ROUTE + '?id=' + insertId + '&active=' + data.active_code + '</a>';
     return mailSender(user.email, "数学竞赛", "激活邮件", html);
   }).then(res => {
     httpRes.sendStatus(200);
