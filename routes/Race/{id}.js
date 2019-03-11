@@ -117,7 +117,7 @@ router.get('/:id/download', CheckLogined, CheckExceptStudent, function (req, res
       competition_area: race.competition_area || '四川省',
       competition_type: o.competition_type,
       school_name: race.school_name || o.school_name,
-      college: race.college || '',
+      college: o.college || '',
       major: o.major,
       school_number: o.school_number,
       contact: o.phone || o.email
