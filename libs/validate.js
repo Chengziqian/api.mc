@@ -23,6 +23,19 @@ module.exports = function (data, roles, callback) {
           switch (true) {
             case (/^required$/.test(o.type)):
               break;
+            case (/^length\|(\d+)-(\d+)$/.test(o.type)):
+              var res = o.type.match(/^length\|(\d+)-(\d+)$/);
+              var min = res[1], max = res[2];
+              console.log(min, max)
+              console.log(data[key])
+              if (data[key].length < min || data[key].length > max) {
+                if(o.errorMessage) {
+                  pushError(errorList, key, o.errorMessage);
+                } else {
+                  pushError(errorList, key,'the length of ' + key + 'must be between ' + min + ' and ' + max);
+                }
+              }
+              break;
             case (/^string$/.test(o.type)):
               if (typeof data[key] !== "string") {
                 if (o.errorMessage) {

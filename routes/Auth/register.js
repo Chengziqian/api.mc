@@ -10,7 +10,8 @@ const CheckEmailRepeat = require('../../middleware/CheckEmaliRepeat');
 let valid = {
   email: [{type:'required'},{type:'string'},{type: 'email'}],
   password: [{type:'required'},{type: 'string'}],
-  captcha: [{type:'required'},{type: 'string'}]
+  captcha: [{type:'required'},{type: 'string'}],
+  origin_password: [{type:'required'},{type: 'string'},{type: 'length|6-18'}]
 };
 
 function randomString(len) {
