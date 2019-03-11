@@ -29,8 +29,8 @@ router.post('/reActive', function(req, res, next){
       '<hr>' +
       '<p>请点击以下链接激活</p>' +
       '<a href="' + process.env.APP_BASE_URL +
-      process.env.APP_ACTIVE_ROUTE + '?id=' + insertId + '&active=' + data.active_code +'">'+ process.env.APP_BASE_URL +
-      process.env.APP_ACTIVE_ROUTE + '?id=' + insertId + '&active=' + data.active_code + '</a>';
+      process.env.APP_ACTIVE_ROUTE + '?id=' + user.id + '&active=' + token +'">'+ process.env.APP_BASE_URL +
+      process.env.APP_ACTIVE_ROUTE + '?id=' + user.id + '&active=' + token + '</a>';
     return mailSender(user.email, "数学竞赛", "激活邮件", html);
   }).then(res => {
     httpRes.sendStatus(200);
