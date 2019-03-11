@@ -20,7 +20,7 @@ module.exports = function (headerData, principalInfo ,itemsData) {
     [{value: principalInfo, style: styles.middle}]
   ];
 
-  let columns = 10;
+  let columns = 11;
   if (itemsData.length !== 0)
   columns = Object.getOwnPropertyNames(itemsData[0]).length;
 
@@ -32,6 +32,7 @@ module.exports = function (headerData, principalInfo ,itemsData) {
     competition_area: {title: '所在省份（赛区名称）', width: '25'},
     competition_type: {title: '参赛类型', width: '15'},
     school_name: {title: '学校名称', width: '15'},
+    college: {title: '学院', width: '20'},
     major: {title: '所学专业', width: '20'},
     school_number: {title: '学号', width: '20'},
     contact: {title: '联系方式', width: '25'}
