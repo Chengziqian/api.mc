@@ -20,7 +20,7 @@ exports.up = function(db) {
     name: {type: 'string', notNull: true},
     competition_area: {type: 'string'},
     school_name: {type: 'string'},
-    introduction: {type: 'string'},
+    introduction: {type: 'text'},
     start_time: {type: 'datetime', notNull: true},
     end_time: {type: 'datetime', notNull: true},
     create_user_id: {type: 'int'},
