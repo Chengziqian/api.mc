@@ -35,7 +35,7 @@ router.post('/', CheckLogined, CheckExceptStudent, function (req, res, next) {
     competition_area: httpReq.body.competition_area || null,
     school_name: httpReq.body.school_name || null,
     principal_email: httpReq.body.principal_email || null,
-    principal_phone: httpReq.body.principal_name || null,
+    principal_phone: httpReq.body.principal_phone || null,
     principal_name: httpReq.body.principal_name || null,
     start_time: moment(httpReq.body.start_time).format('YYYY-MM-DD HH:mm:ss') || null,
     end_time: moment(httpReq.body.end_time).format('YYYY-MM-DD HH:mm:ss') || null,
