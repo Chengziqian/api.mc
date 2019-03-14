@@ -35,21 +35,21 @@ router.post('/register', function (req, res, next) {
   let data = httpReq.body;
   delete data['captcha'];
   delete data['origin_password'];
-  data.status = 0;
+  data.status = 1;
   data.access = -1;
   data.type = 1;
   data.active_code = randomString(64);
   data.password = crypto.createHash('sha256').update(data.password).digest('hex');
   let insertId = '';
   DB.INSERT('users', data).then((res) => {
-      insertId = res.insertId;
-      let html = '<h1>数学竞赛激活邮件</h1>' +
-        '<hr>' +
-        '<p>请点击以下链接激活</p>' +
-        '<a href="' + process.env.APP_BASE_URL +
-        process.env.APP_ACTIVE_ROUTE + '?id=' + insertId + '&active=' + data.active_code +'">'+ process.env.APP_BASE_URL +
-        process.env.APP_ACTIVE_ROUTE + '?id=' + insertId + '&active=' + data.active_code + '</a>';
-      mailSender(data.email, "数学竞赛", "激活邮件", html).catch(e => console.log(e));
+      // insertId = res.insertId;
+      // let html = '<h1>数学竞赛激活邮件</h1>' +
+      //   '<hr>' +
+      //   '<p>请点击以下链接激活</p>' +
+      //   '<a href="' + process.env.APP_BASE_URL +
+      //   process.env.APP_ACTIVE_ROUTE + '?id=' + insertId + '&active=' + data.active_code +'">'+ process.env.APP_BASE_URL +
+      //   process.env.APP_ACTIVE_ROUTE + '?id=' + insertId + '&active=' + data.active_code + '</a>';
+      // mailSender(data.email, "数学竞赛", "激活邮件", html).catch(e => console.log(e));
       httpRes.sendStatus(200);
     }).catch(e => next(e));
   });
