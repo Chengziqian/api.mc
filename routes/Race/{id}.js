@@ -109,6 +109,9 @@ router.get('/:id/download', CheckLogined, CheckExceptStudent, function (req, res
       return DB.JOIN_GET('users_races', 'apply_user_info', 'info_id', 'race_id', req.params.id)
     }
   }).then(r => {
+    r.sort(function (a, b) {
+      return a.competition_type - b.competition_type
+    });
     items = r.map((o, index)=> ({
       index: index + 1,
       truename: o.truename,

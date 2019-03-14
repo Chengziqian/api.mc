@@ -68,9 +68,6 @@ module.exports = function (headerData, principalInfo ,itemsData) {
   }
 
   let dataset = itemsData;
-  dataset.sort(function (a, b) {
-    return a.competition_type - b.competition_type
-  });
   const merges = [
     { start: { row: 1, column: 1 }, end: { row: 1, column: columns } },
     { start: { row: 2, column: 1 }, end: { row: 2, column: columns } },
