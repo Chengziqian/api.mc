@@ -83,6 +83,7 @@ router.get('/:id/members', CheckLogined, CheckExceptStudent, function (httpReq, 
   }).then(r => {
     r = r.map(o => ({
       id: o.id,
+      user_id: o.user_id,
       truename: o.truename,
       email: o.email,
       gender: o.gender,
