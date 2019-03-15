@@ -142,4 +142,31 @@ router.get('/:id/download', CheckLogined, CheckExceptStudent, function (req, res
   }).catch(e => next(e));
 });
 
+router.get('/:id/statistics', function (httpReq, httpRes, next) {
+  DB.GET('race', 'id', httpReq.params.id).then(r => {
+    if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
+    else {
+      return DB.JOIN_GET('users_races', 'apply_user_info', 'info_id', 'race_id', httpReq.params.id).then(r => {
+        let reg = /^(\d{4})\d+$/;
+        let res = {
+          college:{},
+          theClass:{}
+        };
+        r.forEach((value, index) => {
+          let school_number = value['school_number'];
+          let theCollege = value['college'];
+          if (res.college[theCollege] !== undefined) res.college[theCollege]++;
+          else res.college[theCollege] = 1;
+          if(reg.test(school_number)) {
+            let thisClass = school_number.match(reg)[1];
+            if (res.theClass[thisClass] !== undefined) res.theClass[thisClass]++;
+            else res.theClass[thisClass] = 1;
+          }
+        });
+        httpRes.status(200).send(res);
+      }).catch(e => next(e));
+    }
+  })
+});
+
 module.exports = router;
