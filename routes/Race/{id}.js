@@ -217,7 +217,7 @@ router.get('/:id/statistics/download',CheckLogined, CheckExceptStudent, function
               else res.grade['其他'] = 1
             }
           });
-          let buffer = StatisticsExcelCreator(race.name, '参赛学校（盖章）电子科技大学' +
+          let buffer = StatisticsExcelCreator(race.name + '（统计表）', '参赛学校（盖章）电子科技大学' +
             '        负责人:' + race.principal_name +
             '        电话:' + race.principal_phone +
             '        Email:' + race.principal_email, res);
