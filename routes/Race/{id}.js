@@ -221,7 +221,7 @@ router.get('/:id/statistics/download',CheckLogined, CheckExceptStudent, function
             '        负责人:' + race.principal_name +
             '        电话:' + race.principal_phone +
             '        Email:' + race.principal_email, res);
-          httpRes.attachment(encodeURIComponent('电子科技大学' + race.name + '参赛表.xlsx')).status(200).send(buffer)
+          httpRes.attachment(encodeURIComponent('电子科技大学' + race.name + '(统计表).xlsx')).status(200).send(buffer)
         });
       }).catch(e => next(e));
     }
