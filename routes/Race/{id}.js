@@ -3,10 +3,10 @@ const router = express.Router();
 const DB = require('../../libs/DB_Service');
 const createError = require('http-errors');
 const CheckLogined = require('../../middleware/CheckLogined');
-const CheckAdmin = require('../../middleware/CheckAdmin');
 const CheckExceptStudent = require('../../middleware/CheckExceptStudent');
 const validate = require('../../libs/validate');
-const ExcelCreater = require('./CreateMembersInfoExcel');
+const MemberExcelCreator = require('./CreateMembersInfoExcel');
+const StatisticsExcelCreator = require('./CreateStatisticExcel');
 const moment = require('moment');
 
 router.get('/:id',CheckLogined, function (httpReq, httpRes, next) {
@@ -134,7 +134,7 @@ router.get('/:id/download', CheckLogined, CheckExceptStudent, function (req, res
       school_number: o.school_number,
       contact: o.phone || o.email
     }));
-    let buffer = ExcelCreater(race.name, '参赛学校（盖章）电子科技大学' +
+    let buffer = MemberExcelCreator(race.name, '参赛学校（盖章）电子科技大学' +
       '        负责人:' + race.principal_name +
       '        电话:' + race.principal_phone +
       '        Email:' + race.principal_email, items);
@@ -142,7 +142,7 @@ router.get('/:id/download', CheckLogined, CheckExceptStudent, function (req, res
   }).catch(e => next(e));
 });
 
-router.get('/:id/statistics', function (httpReq, httpRes, next) {
+router.get('/:id/statistics', CheckLogined, CheckExceptStudent, function (httpReq, httpRes, next) {
   DB.GET('race', 'id', httpReq.params.id).then(r => {
     if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
     else {
@@ -164,6 +164,39 @@ router.get('/:id/statistics', function (httpReq, httpRes, next) {
           }
         });
         httpRes.status(200).send(res);
+      }).catch(e => next(e));
+    }
+  })
+});
+
+router.get('/:id/statistics/download',CheckLogined, CheckExceptStudent, function (httpReq, httpRes, next) {
+  let race = {};
+  DB.GET('race', 'id', httpReq.params.id).then(r => {
+    if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
+    else {
+      race = r[0];
+      return DB.JOIN_GET('users_races', 'apply_user_info', 'info_id', 'race_id', httpReq.params.id).then(r => {
+        let reg = /^(\d{4})\d+$/;
+        let res = {
+          college:{},
+          theClass:{}
+        };
+        r.forEach((value, index) => {
+          let school_number = value['school_number'];
+          let theCollege = value['college'];
+          if (res.college[theCollege] !== undefined) res.college[theCollege]++;
+          else res.college[theCollege] = 1;
+          if(reg.test(school_number)) {
+            let thisClass = school_number.match(reg)[1];
+            if (res.theClass[thisClass] !== undefined) res.theClass[thisClass]++;
+            else res.theClass[thisClass] = 1;
+          }
+        });
+        let buffer = StatisticsExcelCreator(race.name, '参赛学校（盖章）电子科技大学' +
+          '        负责人:' + race.principal_name +
+          '        电话:' + race.principal_phone +
+          '        Email:' + race.principal_email, res);
+        httpRes.attachment(encodeURIComponent('电子科技大学' + race.name + '参赛表.xlsx')).status(200).send(buffer)
       }).catch(e => next(e));
     }
   })
