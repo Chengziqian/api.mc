@@ -93,18 +93,18 @@ module.exports = function (headerData, principalInfo, itemsData) {
 
   let dataCount = dataSet.length;
 
-  for (let key in itemsData.theClass) {
-    if(itemsData.theClass.hasOwnProperty(key)) {
+  for (let key in itemsData.grade) {
+    if(itemsData.grade.hasOwnProperty(key)) {
       if (dataCount <= 0) {
         dataSet.push({
           collegeName: '',
           collegeCount: '',
           className: key+'级',
-          classCount: itemsData.theClass[key],
+          classCount: itemsData.grade[key],
         })
       } else {
         dataSet[dataSet.length - dataCount].className = key + '级';
-        dataSet[dataSet.length - dataCount].classCount = itemsData.theClass[key];
+        dataSet[dataSet.length - dataCount].classCount = itemsData.grade[key];
       }
       dataCount--;
     }

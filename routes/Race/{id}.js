@@ -147,21 +147,21 @@ router.get('/:id/statistics', CheckLogined, CheckExceptStudent, function (httpRe
   DB.GET('race', 'id', httpReq.params.id).then(r => {
     if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
     else {
-      return DB.JOIN_GET('users_races', 'apply_user_info', 'info_id', 'race_id', httpReq.params.id).then(r => {
-        let reg = /^(\d{4})\d+$/;
+      return DB.JOIN_GET('users_races', 'apply_user_info', 'info_id', 'race_id', httpReq.params.id).then(data => {
+        let reg = /^(\d{4})\d*$/;
         let res = {
           college:{},
-          theClass:{}
+          grade:{}
         };
-        r.forEach((value, index) => {
+        data.forEach((value, index) => {
           let school_number = value['school_number'];
           let theCollege = value['college'];
           if (res.college[theCollege] !== undefined) res.college[theCollege]++;
           else res.college[theCollege] = 1;
           if(reg.test(school_number)) {
             let thisClass = school_number.match(reg)[1];
-            if (res.theClass[thisClass] !== undefined) res.theClass[thisClass]++;
-            else res.theClass[thisClass] = 1;
+            if (res.grade[thisClass] !== undefined) res.grade[thisClass]++;
+            else res.grade[thisClass] = 1;
           }
         });
         httpRes.status(200).send(res);
@@ -177,10 +177,10 @@ router.get('/:id/statistics/download',CheckLogined, CheckExceptStudent, function
     else {
       race = r[0];
       return DB.JOIN_GET('users_races', 'apply_user_info', 'info_id', 'race_id', httpReq.params.id).then(r => {
-        let reg = /^(\d{4})\d+$/;
+        let reg = /^(\d{4})\d*$/;
         let res = {
           college:{},
-          theClass:{}
+          grade:{}
         };
         r.forEach((value, index) => {
           let school_number = value['school_number'];
@@ -189,8 +189,8 @@ router.get('/:id/statistics/download',CheckLogined, CheckExceptStudent, function
           else res.college[theCollege] = 1;
           if(reg.test(school_number)) {
             let thisClass = school_number.match(reg)[1];
-            if (res.theClass[thisClass] !== undefined) res.theClass[thisClass]++;
-            else res.theClass[thisClass] = 1;
+            if (res.grade[thisClass] !== undefined) res.grade[thisClass]++;
+            else res.grade[thisClass] = 1;
           }
         });
         let buffer = StatisticsExcelCreator(race.name, '参赛学校（盖章）电子科技大学' +
