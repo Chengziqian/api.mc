@@ -143,28 +143,41 @@ router.get('/:id/download', CheckLogined, CheckExceptStudent, function (req, res
   }).catch(e => next(e));
 });
 
-router.get('/:id/statistics', CheckLogined, CheckExceptStudent, function (httpReq, httpRes, next) {
+router.get('/:id/statistics',CheckLogined, CheckExceptStudent, function (httpReq, httpRes, next) {
   DB.GET('race', 'id', httpReq.params.id).then(r => {
     if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
     else {
       return DB.JOIN_GET('users_races', 'apply_user_info', 'info_id', 'race_id', httpReq.params.id).then(data => {
-        let reg = /^(\d{4})\d*$/;
-        let res = {
-          college:{},
-          grade:{}
-        };
-        data.forEach((value, index) => {
-          let school_number = value['school_number'];
-          let theCollege = value['college'];
-          if (res.college[theCollege] !== undefined) res.college[theCollege]++;
-          else res.college[theCollege] = 1;
-          if(reg.test(school_number)) {
-            let thisClass = school_number.match(reg)[1];
-            if (res.grade[thisClass] !== undefined) res.grade[thisClass]++;
-            else res.grade[thisClass] = 1;
-          }
-        });
-        httpRes.status(200).send(res);
+        DB.GET('options', 'root_id', 1).then(list => {
+          let reg = /^(\d{4})\d*$/;
+          let res = {
+            college:{},
+            grade:{}
+          };
+          let checkList = [];
+          list.forEach((v) => checkList.push(v.name));
+          console.log(checkList)
+          data.forEach((value, index) => {
+            let school_number = value['school_number'];
+            let theCollege = value['college'];
+            if (checkList.indexOf(theCollege) !== -1) {
+              if (res.college[theCollege] !== undefined) res.college[theCollege]++;
+              else res.college[theCollege] = 1;
+            } else {
+              if (res.college['其他'] !== undefined) res.college['其他']++;
+              else res.college['其他'] = 1
+            }
+            if(reg.test(school_number)) {
+              let thisClass = school_number.match(reg)[1];
+              if (res.grade[thisClass] !== undefined) res.grade[thisClass]++;
+              else res.grade[thisClass] = 1;
+            } else {
+              if (res.grade['其他'] !== undefined) res.grade['其他']++;
+              else res.grade['其他'] = 1
+            }
+          });
+          httpRes.status(200).send(res);
+        })
       }).catch(e => next(e));
     }
   })
@@ -176,28 +189,40 @@ router.get('/:id/statistics/download',CheckLogined, CheckExceptStudent, function
     if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
     else {
       race = r[0];
-      return DB.JOIN_GET('users_races', 'apply_user_info', 'info_id', 'race_id', httpReq.params.id).then(r => {
-        let reg = /^(\d{4})\d*$/;
-        let res = {
-          college:{},
-          grade:{}
-        };
-        r.forEach((value, index) => {
-          let school_number = value['school_number'];
-          let theCollege = value['college'];
-          if (res.college[theCollege] !== undefined) res.college[theCollege]++;
-          else res.college[theCollege] = 1;
-          if(reg.test(school_number)) {
-            let thisClass = school_number.match(reg)[1];
-            if (res.grade[thisClass] !== undefined) res.grade[thisClass]++;
-            else res.grade[thisClass] = 1;
-          }
+      return DB.JOIN_GET('users_races', 'apply_user_info', 'info_id', 'race_id', httpReq.params.id).then(data => {
+        DB.GET('options', 'root_id', 1).then(list => {
+          let reg = /^(\d{4})\d*$/;
+          let res = {
+            college: {},
+            grade: {}
+          };
+          let checkList = [];
+          list.forEach((v) => checkList.push(v.name));
+          data.forEach((value, index) => {
+            let school_number = value['school_number'];
+            let theCollege = value['college'];
+            if (checkList.indexOf(theCollege) !== -1) {
+              if (res.college[theCollege] !== undefined) res.college[theCollege]++;
+              else res.college[theCollege] = 1;
+            } else {
+              if (res.college['其他'] !== undefined) res.college['其他']++;
+              else res.college['其他'] = 1
+            }
+            if (reg.test(school_number)) {
+              let thisClass = school_number.match(reg)[1];
+              if (res.grade[thisClass] !== undefined) res.grade[thisClass]++;
+              else res.grade[thisClass] = 1;
+            } else {
+              if (res.grade['其他'] !== undefined) res.grade['其他']++;
+              else res.grade['其他'] = 1
+            }
+          });
+          let buffer = StatisticsExcelCreator(race.name, '参赛学校（盖章）电子科技大学' +
+            '        负责人:' + race.principal_name +
+            '        电话:' + race.principal_phone +
+            '        Email:' + race.principal_email, res);
+          httpRes.attachment(encodeURIComponent('电子科技大学' + race.name + '参赛表.xlsx')).status(200).send(buffer)
         });
-        let buffer = StatisticsExcelCreator(race.name, '参赛学校（盖章）电子科技大学' +
-          '        负责人:' + race.principal_name +
-          '        电话:' + race.principal_phone +
-          '        Email:' + race.principal_email, res);
-        httpRes.attachment(encodeURIComponent('电子科技大学' + race.name + '参赛表.xlsx')).status(200).send(buffer)
       }).catch(e => next(e));
     }
   })
