@@ -100,6 +100,15 @@ router.get('/:id/members', CheckLogined, CheckExceptStudent, function (httpReq, 
   }).catch(e => next(e));
 });
 
+router.delete('/:id/members/:userId', CheckLogined, CheckExceptStudent, function (httpReq, httpRes, next) {
+  let race_id = httpReq.params.id;
+  let user_id = httpReq.params.userId;
+  console.log(race_id, user_id)
+  DB.DELETE_IN_CONDITIONS('users_races', {user_id: user_id, race_id: race_id}).then(r => {
+    httpRes.sendStatus(200);
+  }).catch(e => next(e));
+});
+
 router.get('/:id/download', CheckLogined, CheckExceptStudent, function (req, res, next) {
   let race = {};
   DB.GET('race', 'id', req.params.id).then(r => {

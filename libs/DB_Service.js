@@ -42,6 +42,28 @@ function createConnection(config) {
 
       });
     },
+    DELETE_IN_CONDITIONS: function (tableName, conditionsObj) {
+      let sql = '';
+      for (let key in conditionsObj) {
+        let s = " ?? = ? AND";
+        if (conditionsObj.hasOwnProperty(key))
+          s = mysql.format(s, [key, conditionsObj[key]]);
+        sql += s;
+      }
+      sql = sql.slice(0, sql.length - 3);
+      let table_sql = 'DELETE FROM ?? WHERE';
+      table_sql = mysql.format(table_sql, [tableName]);
+      return new Promise ((resolve, reject) => {
+        pool.getConnection(function (err, connection) {
+          if (err) reject(err);
+          connection.query(table_sql + sql, (err, res, field) => {
+            connection.release();
+            if (err) reject(err);
+            else resolve(res);
+          })
+        });
+      })
+    },
     SAVE: function (tableName, findFieldName, findValue, changeData) {
       return new Promise((resolve, reject) => {
         pool.getConnection(function (err, connection) {
@@ -60,7 +82,7 @@ function createConnection(config) {
       for (let key in conditionsObj) {
         let s = " ?? = ? AND";
         if (conditionsObj.hasOwnProperty(key))
-          s = mysql.format(s, [key, conditionsObj[key]])
+          s = mysql.format(s, [key, conditionsObj[key]]);
         sql += s;
       }
       sql = sql.slice(0, sql.length - 3);
@@ -117,7 +139,7 @@ function createConnection(config) {
       for (let key in conditionsObj) {
         let s = " ?? = ? AND";
         if (conditionsObj.hasOwnProperty(key))
-          s = mysql.format(s, [key, conditionsObj[key]])
+          s = mysql.format(s, [key, conditionsObj[key]]);
         sql += s;
       }
       sql = sql.slice(0, sql.length - 3);
