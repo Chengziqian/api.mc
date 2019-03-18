@@ -176,7 +176,7 @@ router.get('/:id/statistics', function (httpReq, httpRes, next) {
               if (res.grade['其他'] !== undefined) res.grade['其他']++;
               else res.grade['其他'] = 1
             }
-            if (theCampus === null) {
+            if (theCampus === null || theCampus === '') {
               if (res.campus['未填写'] !== undefined) res.campus['未填写']++;
               else res.campus['未填写'] = 1
             } else {
@@ -226,7 +226,7 @@ router.get('/:id/statistics/download', function (httpReq, httpRes, next) {
               if (res.grade['其他'] !== undefined) res.grade['其他']++;
               else res.grade['其他'] = 1
             }
-            if (theCampus === null) {
+            if (theCampus === null || theCampus === '') {
               if (res.campus['未填写'] !== undefined) res.campus['未填写']++;
               else res.campus['未填写'] = 1
             } else {

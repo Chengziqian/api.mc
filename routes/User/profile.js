@@ -14,7 +14,8 @@ let valid = {
   competition_type: [{type: 'integer'},{type: 'alias', text: '竞赛类型'}],
   school_name: [{type: 'string'},{type: 'alias', text: '学校名称'}],
   major: [{type: 'string'},{type: 'alias', text: '专业'}],
-  school_number: [{type: 'string'},{type: 'alias', text: '学号'}]
+  school_number: [{type: 'string'},{type: 'alias', text: '学号'}],
+  campus: [{type: 'string'},{type: 'alias', text: '校区'}]
 };
 router.put('/profile',CheckLogined ,function(req, res, next) {
   validate(req.body, valid, function (err) {
@@ -32,7 +33,8 @@ router.put('/profile',CheckLogined ,function(req, res, next) {
     competition_type: httpReq.body.competition_type,
     school_name: httpReq.body.school_name || null,
     major: httpReq.body.major || null,
-    school_number: httpReq.body.school_number || null
+    school_number: httpReq.body.school_number || null,
+    campus: httpReq.body.campus || '',
   };
   DB.SAVE('users', 'id', httpReq.USER.id, data).then(r => {
     httpRes.sendStatus(200);
