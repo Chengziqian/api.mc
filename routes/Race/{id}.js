@@ -95,7 +95,8 @@ router.get('/:id/members', CheckLogined, CheckExceptStudent, function (httpReq, 
       school_name: race_school_name || o.school_name,
       major: o.major,
       college: o.college,
-      school_number: o.school_number
+      school_number: o.school_number,
+      campus: o.campus,
     }));
     httpRes.status(200).send(r);
   }).catch(e => next(e));
@@ -104,7 +105,6 @@ router.get('/:id/members', CheckLogined, CheckExceptStudent, function (httpReq, 
 router.delete('/:id/members/:userId', CheckLogined, CheckExceptStudent, function (httpReq, httpRes, next) {
   let race_id = httpReq.params.id;
   let user_id = httpReq.params.userId;
-  console.log(race_id, user_id)
   DB.DELETE_IN_CONDITIONS('users_races', {user_id: user_id, race_id: race_id}).then(r => {
     httpRes.sendStatus(200);
   }).catch(e => next(e));
@@ -143,7 +143,7 @@ router.get('/:id/download', CheckLogined, CheckExceptStudent, function (req, res
   }).catch(e => next(e));
 });
 
-router.get('/:id/statistics',CheckLogined, CheckExceptStudent, function (httpReq, httpRes, next) {
+router.get('/:id/statistics', function (httpReq, httpRes, next) {
   DB.GET('race', 'id', httpReq.params.id).then(r => {
     if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
     else {
@@ -152,55 +152,15 @@ router.get('/:id/statistics',CheckLogined, CheckExceptStudent, function (httpReq
           let reg = /^(\d{4})\d*$/;
           let res = {
             college:{},
-            grade:{}
-          };
-          let checkList = [];
-          list.forEach((v) => checkList.push(v.name));
-          console.log(checkList)
-          data.forEach((value, index) => {
-            let school_number = value['school_number'];
-            let theCollege = value['college'];
-            if (checkList.indexOf(theCollege) !== -1) {
-              if (res.college[theCollege] !== undefined) res.college[theCollege]++;
-              else res.college[theCollege] = 1;
-            } else {
-              if (res.college['其他'] !== undefined) res.college['其他']++;
-              else res.college['其他'] = 1
-            }
-            if(reg.test(school_number)) {
-              let thisClass = school_number.match(reg)[1];
-              if (res.grade[thisClass] !== undefined) res.grade[thisClass]++;
-              else res.grade[thisClass] = 1;
-            } else {
-              if (res.grade['其他'] !== undefined) res.grade['其他']++;
-              else res.grade['其他'] = 1
-            }
-          });
-          httpRes.status(200).send(res);
-        })
-      }).catch(e => next(e));
-    }
-  })
-});
-
-router.get('/:id/statistics/download',CheckLogined, CheckExceptStudent, function (httpReq, httpRes, next) {
-  let race = {};
-  DB.GET('race', 'id', httpReq.params.id).then(r => {
-    if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
-    else {
-      race = r[0];
-      return DB.JOIN_GET('users_races', 'apply_user_info', 'info_id', 'race_id', httpReq.params.id).then(data => {
-        DB.GET('options', 'root_id', 1).then(list => {
-          let reg = /^(\d{4})\d*$/;
-          let res = {
-            college: {},
-            grade: {}
+            grade:{},
+            campus:{},
           };
           let checkList = [];
           list.forEach((v) => checkList.push(v.name));
           data.forEach((value, index) => {
             let school_number = value['school_number'];
             let theCollege = value['college'];
+            let theCampus = value['campus'];
             if (checkList.indexOf(theCollege) !== -1) {
               if (res.college[theCollege] !== undefined) res.college[theCollege]++;
               else res.college[theCollege] = 1;
@@ -215,6 +175,63 @@ router.get('/:id/statistics/download',CheckLogined, CheckExceptStudent, function
             } else {
               if (res.grade['其他'] !== undefined) res.grade['其他']++;
               else res.grade['其他'] = 1
+            }
+            if (theCampus === null) {
+              if (res.campus['未填写'] !== undefined) res.campus['未填写']++;
+              else res.campus['未填写'] = 1
+            } else {
+              if (res.campus[theCampus] !== undefined) res.campus[theCampus]++;
+              else res.campus[theCampus] = 1
+            }
+          });
+          httpRes.status(200).send(res);
+        })
+      }).catch(e => next(e));
+    }
+  })
+});
+
+router.get('/:id/statistics/download', function (httpReq, httpRes, next) {
+  let race = {};
+  DB.GET('race', 'id', httpReq.params.id).then(r => {
+    if (r.length === 0) return Promise.reject(createError(400, {message: '无此比赛'}));
+    else {
+      race = r[0];
+      return DB.JOIN_GET('users_races', 'apply_user_info', 'info_id', 'race_id', httpReq.params.id).then(data => {
+        DB.GET('options', 'root_id', 1).then(list => {
+          let reg = /^(\d{4})\d*$/;
+          let res = {
+            college: {},
+            grade: {},
+            campus: {},
+          };
+          let checkList = [];
+          list.forEach((v) => checkList.push(v.name));
+          data.forEach((value, index) => {
+            let school_number = value['school_number'];
+            let theCollege = value['college'];
+            let theCampus = value['campus'];
+            if (checkList.indexOf(theCollege) !== -1) {
+              if (res.college[theCollege] !== undefined) res.college[theCollege]++;
+              else res.college[theCollege] = 1;
+            } else {
+              if (res.college['其他'] !== undefined) res.college['其他']++;
+              else res.college['其他'] = 1
+            }
+            if (reg.test(school_number)) {
+              let thisClass = school_number.match(reg)[1];
+              if (res.grade[thisClass] !== undefined) res.grade[thisClass]++;
+              else res.grade[thisClass] = 1;
+            } else {
+              if (res.grade['其他'] !== undefined) res.grade['其他']++;
+              else res.grade['其他'] = 1
+            }
+            if (theCampus === null) {
+              if (res.campus['未填写'] !== undefined) res.campus['未填写']++;
+              else res.campus['未填写'] = 1
+            } else {
+              if (res.campus[theCampus] !== undefined) res.campus[theCampus]++;
+              else res.campus[theCampus] = 1
             }
           });
           let buffer = StatisticsExcelCreator(race.name + '（统计表）', '参赛学校（盖章）电子科技大学' +

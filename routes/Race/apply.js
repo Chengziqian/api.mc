@@ -16,7 +16,8 @@ let valid = {
   competition_type: [{type: 'integer'},{type: 'required'},{type: 'alias', text: '竞赛类型'}],
   school_name: [{type: 'string'},{type: 'alias', text: '学校名称'}],
   major: [{type: 'string'},{type: 'required'},{type: 'alias', text: '专业'}],
-  school_number: [{type: 'string'},{type: 'required'},{type: 'alias', text: '学号'}]
+  school_number: [{type: 'string'},{type: 'required'},{type: 'alias', text: '学号'}],
+  campus: [{type: 'string'},{type: 'required'},{type: 'alias', text: '校区'}]
 };
 router.post('/apply/:id',CheckLogined, function(req, res, next){
   validate(req.body, valid, function (err) {
@@ -40,7 +41,8 @@ router.post('/apply/:id',CheckLogined, function(req, res, next){
         school_name: httpReq.body.school_name || '',
         major: httpReq.body.major || null,
         school_number: httpReq.body.school_number  || null,
-        user_id: httpReq.USER.id
+        user_id: httpReq.USER.id,
+        campus: httpReq.campus || '',
       };
       return DB.INSERT('apply_user_info', data);
     }
