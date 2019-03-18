@@ -42,7 +42,7 @@ router.post('/apply/:id',CheckLogined, function(req, res, next){
         major: httpReq.body.major || null,
         school_number: httpReq.body.school_number  || null,
         user_id: httpReq.USER.id,
-        campus: httpReq.campus || '',
+        campus: httpReq.body.campus || '',
       };
       return DB.INSERT('apply_user_info', data);
     }
