@@ -158,9 +158,9 @@ router.get('/:id/statistics', function (httpReq, httpRes, next) {
           let checkList = [];
           list.forEach((v) => checkList.push(v.name));
           data.forEach((value, index) => {
-            let school_number = value['school_number'];
-            let theCollege = value['college'];
-            let theCampus = value['campus'];
+            let school_number = value['school_number'].trim();
+            let theCollege = value['college'].trim();
+            let theCampus = value['campus'].trim();
             if (checkList.indexOf(theCollege) !== -1) {
               if (res.college[theCollege] !== undefined) res.college[theCollege]++;
               else res.college[theCollege] = 1;
@@ -208,9 +208,9 @@ router.get('/:id/statistics/download', function (httpReq, httpRes, next) {
           let checkList = [];
           list.forEach((v) => checkList.push(v.name));
           data.forEach((value, index) => {
-            let school_number = value['school_number'];
-            let theCollege = value['college'];
-            let theCampus = value['campus'];
+            let school_number = value['school_number'].trim();
+            let theCollege = value['college'].trim();
+            let theCampus = value['campus'].trim();
             if (checkList.indexOf(theCollege) !== -1) {
               if (res.college[theCollege] !== undefined) res.college[theCollege]++;
               else res.college[theCollege] = 1;
