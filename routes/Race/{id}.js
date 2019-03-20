@@ -149,7 +149,7 @@ router.get('/:id/statistics', function (httpReq, httpRes, next) {
     else {
       return DB.JOIN_GET('users_races', 'apply_user_info', 'info_id', 'race_id', httpReq.params.id).then(data => {
         DB.GET('options', 'root_id', 1).then(list => {
-          let reg = /^(\d{4})\d*$/;
+          let reg = /^\s*(\d{4})\d*\s*$/;
           let res = {
             college:{},
             grade:{},
@@ -158,9 +158,9 @@ router.get('/:id/statistics', function (httpReq, httpRes, next) {
           let checkList = [];
           list.forEach((v) => checkList.push(v.name));
           data.forEach((value, index) => {
-            let school_number = value['school_number'].trim();
-            let theCollege = value['college'].trim();
-            let theCampus = value['campus'].trim();
+            let school_number = value['school_number'];
+            let theCollege = value['college'];
+            let theCampus = value['campus'];
             if (checkList.indexOf(theCollege) !== -1) {
               if (res.college[theCollege] !== undefined) res.college[theCollege]++;
               else res.college[theCollege] = 1;
@@ -199,7 +199,7 @@ router.get('/:id/statistics/download', function (httpReq, httpRes, next) {
       race = r[0];
       return DB.JOIN_GET('users_races', 'apply_user_info', 'info_id', 'race_id', httpReq.params.id).then(data => {
         DB.GET('options', 'root_id', 1).then(list => {
-          let reg = /^(\d{4})\d*$/;
+          let reg = /^\s*(\d{4})\d*\s*$/;
           let res = {
             college: {},
             grade: {},
@@ -208,9 +208,9 @@ router.get('/:id/statistics/download', function (httpReq, httpRes, next) {
           let checkList = [];
           list.forEach((v) => checkList.push(v.name));
           data.forEach((value, index) => {
-            let school_number = value['school_number'].trim();
-            let theCollege = value['college'].trim();
-            let theCampus = value['campus'].trim();
+            let school_number = value['school_number'];
+            let theCollege = value['college'];
+            let theCampus = value['campus'];
             if (checkList.indexOf(theCollege) !== -1) {
               if (res.college[theCollege] !== undefined) res.college[theCollege]++;
               else res.college[theCollege] = 1;
