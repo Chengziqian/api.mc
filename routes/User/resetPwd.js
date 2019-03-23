@@ -19,6 +19,7 @@ function randomString(len) {
 }
 
 router.post('/resetPwd', function(req, res, next){
+  req.body.email = req.body.email.trim();
   let valid = {
     email: [{type:'required'},{type:'string'},{type: 'email'},{type: 'alias', text: '邮箱'}],
     captcha: [{type:'required'},{type: 'string'},{type: 'alias', text: '验证码'}],
