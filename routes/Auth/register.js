@@ -27,10 +27,11 @@ function randomString(len) {
 
 
 router.post('/register', function (req, res, next) {
-    validate(req.body, valid, function (err) {
-      if (err) next(err);
-      else next()
-    })
+  req.body.email = req.body.email.trim();
+  validate(req.body, valid, function (err) {
+    if (err) next(err);
+    else next()
+  })
 }, CheckCaptcha, CheckEmailRepeat, function (httpReq, httpRes, next) {
   let data = httpReq.body;
   delete data['captcha'];

@@ -21,6 +21,7 @@ let logon_valid = {
   captcha: [{type:'required'},{type: 'string'},{type: 'alias', text: '验证码'}]
 };
 router.post('/login', function(req, res, next) {
+  req.body.email = req.body.email.trim();
   validate(req.body, logon_valid, function (err) {
     if (err) throw err;
     else next();
